@@ -1,0 +1,35 @@
+local module = {
+    eventConsumedLog = true,
+    eventEnqueuedLog = false,
+    eventFailLog = true,
+    monitorTypes = {
+        AttackImpactEvent = true,
+        AttackResolvedEvent = true,
+        AttackStartedEvent = true,
+        BeginGameEvent = true,
+        CooldownReadyEvent = true,
+        DamageAppliedEvent = true,
+        ProjectileLaunchedEvent = true,
+        TargetAcquiredEvent = true,
+        TargetLostEvent = true,
+        UnitAggroSearchEvent = true,
+        UnitAggroStartedEvent = true,
+        UnitAggroStoppedEvent = true,
+        UnitDiedEvent = true,
+        UnitEnteredTowerRangeEvent = true,
+        UnitLeftTowerRangeEvent = true,
+        UnitMovementIntentEvent = true,
+        UnitMovementInterruptedEvent = true,
+        UnitMovementPlanningEvent = true,
+        UnitMovementRequestedEvent = true,
+        UnitMovementResolvedEvent = true,
+        UnitMovementSegmentEvent = true,
+        UnitMovementStartedEvent = true,
+        UnitPlacementCommand = true,
+        UnitPlacementCommandResponse = true,
+        UnitReachedAggroEvent = true,
+        UnitSpawnedEvent = true,
+    }
+}
+
+return module
