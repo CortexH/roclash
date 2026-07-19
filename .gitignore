@@ -1,0 +1,12 @@
+# Project place file
+/roclash.rbxlx
+
+# Roblox Studio lock files
+/*.rbxlx.lock
+/*.rbxl.lock
+
+sourcemap.json
+
+# Ferramentas e documentação local
+/graphify-out/
+/projeto - contexto/
