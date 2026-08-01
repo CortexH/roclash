@@ -46,7 +46,11 @@ export type unitMovementInterruptedEvent = {
 	["data"] : {
 		["unitId"] : string,
 		["unitMovementVersion"] : string,
-		["REASON"] : "PATH_BLOCKED" | "TARGET_FOUND" | "COMMAND" | "UNIT_DIED"
+		["reason"] : "PATH_BLOCKED" | "AGGRO_TARGET_FOUND" | "COMMAND" | "UNIT_DIED",
+		["reasonData"] : {
+			["targetId"] : string?,
+			["commandType"] : string?
+		}
 	}
 }
 

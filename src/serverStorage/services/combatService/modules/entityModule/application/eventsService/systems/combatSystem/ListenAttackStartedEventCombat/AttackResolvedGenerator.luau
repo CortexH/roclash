@@ -18,7 +18,7 @@ function module.generate(
 	local attacker : unitEntity.unitEntity = unitsBC:getActiveUnitById(event.data.attackerId)
 	
 	local attackerConfig = attacker:getAttacker():getAttackerConfig()
-	
+
 	local event : eventType.attackResolvedEvent = {
 		eventType = "AttackResolvedEvent",
 		delay = attackerConfig:getTotalAttackTime(),

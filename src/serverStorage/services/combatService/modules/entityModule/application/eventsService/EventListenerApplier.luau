@@ -6,6 +6,7 @@ local applies = {
 	require(script.Parent.appliers.UnitPosition._UnitPositionApplier),
 	require(script.Parent.appliers.UnitLifecycle._UnitLifecycleApplier),
 	require(script.Parent.appliers.unitCombat._UnitCombatApplier),
+	require(script.Parent.appliers.unitIntent._UnitIntentApplier)
 }
 
 function module.execute(event, context)

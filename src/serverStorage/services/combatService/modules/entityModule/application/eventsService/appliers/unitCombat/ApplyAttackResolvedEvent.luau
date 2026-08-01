@@ -12,6 +12,7 @@ function module.apply(event : eventType.attackResolvedEvent, context)
 	
 	attacker:getAttacker():getState():setIdle(context["TimeBC"].currentTime)
 	attacker:getAttacker():setLastAttackTime(context["TimeBC"].currentTime)
+	
 end
 
 return module

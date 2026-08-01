@@ -47,6 +47,10 @@ function module.newStructureConfig(
 	return self
 end
 
+function module:getStructureType()
+	return self.structureType
+end
+
 function module:setBehavior(behavior) : (boolean, string)
 	if self.unitType ~= "NPC" then return true end
 	if not behavior then return false, "Behavior não pode ser nulo" end
@@ -75,6 +79,14 @@ end
 
 function module:getWalkSpeed()
 	return self.walkSpeed
+end
+
+function module:getWeaponType()
+	return self.sword
+end
+
+function module:getEquipmentType()
+	return self.equipment
 end
 
 return module

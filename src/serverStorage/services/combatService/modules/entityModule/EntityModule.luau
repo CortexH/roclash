@@ -34,8 +34,6 @@ function runBootstrap()
 
 	local controllers = script.Parent.infrastructure.adapter.inbound.controller.controller
 
-	require(controllers.UnitCommandsAdapter)
-
 end
 
 runBootstrap()

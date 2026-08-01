@@ -63,6 +63,27 @@ function module.newForType()
 	return self
 end
 
+function module:canAttack(currentTime : number)
+	return self:getRemainingCooldown(currentTime) <= 0
+	and self:getState():getState() == "IDLE"
+end
+
+function module:getRemainingCooldown(ct)
+    local lastAttackTime = self:getLastAttackTime()
+    if not lastAttackTime then
+        return 0
+    end
+
+    local cooldownTime = self:getAttackCooldownTime()
+    if not cooldownTime then
+        return 0
+    end
+
+    local remaining = (lastAttackTime + cooldownTime) - ct
+
+    return math.max(0, remaining)
+end
+
 function module:getRange() : number
 	return self.attackRange:getValue()
 end

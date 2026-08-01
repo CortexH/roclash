@@ -134,13 +134,13 @@ function unitEntity:isPlaced()
 	return self.placed
 end
 
-function unitEntity:isInRange(other : position.position)
+function unitEntity:isInRange(other : position.position, ct)
 	if not self.placed then return false end
 
 	local range :number = self:getAttacker():getRange()
-	local thisPosition : position.position = self:getPosition():getCurrentPosition()
+	local thisPosition : position.position = self:getPosition():getCurrentPosition(ct)
 	
-	return thisPosition:distanceTo(thisPosition) <= range
+	return thisPosition:distanceTo(other) <= range
 end
 
 function unitEntity:isInAggroRange(other : position.position)
@@ -229,7 +229,7 @@ function unitEntity:isDead()
 end
 
 function unitEntity:validateOwner(owner)
-	return self.owner == tostring(owner)
+	return tostring(self.owner) == tostring(owner)
 end
 
 function unitEntity:getAttackedBy() : attackedBy.attackedBy

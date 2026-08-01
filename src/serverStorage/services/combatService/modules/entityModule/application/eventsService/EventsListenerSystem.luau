@@ -5,7 +5,9 @@ local applies = {
 	require(script.Parent.systems.MovementSystem._MovementSystem),
 	require(script.Parent.systems.TowerRangeSystem._TowerRangeSystem),
 	require(script.Parent.systems.combatSystem._CombatSystem),
-	require(script.Parent.systems.DamageResolutionSystem._DamageResolutionSystem)
+	require(script.Parent.systems.DamageResolutionSystem._DamageResolutionSystem),
+	require(script.Parent.systems.UnitIntentSystem._UnitIntentSystem),
+
 }
 
 function module.execute(event, context)
