@@ -24,7 +24,21 @@ function module.handle(event : combatEventTypes.unitAggroSearchEvent, context)
 	local bestTarget = aggroService.getBestTarget(event.data.aggroingUnitId, brain, context)
 	
 	if bestTarget then
-		return {eventService.createUnitAggroStartedEvent(0, event.data.aggroingUnitId, bestTarget)}
+		return {{
+			delay = 0,
+			eventType = "UnitAggroIntentEvent",
+			type = "EVENT",
+			data = {
+				source = event.data.aggroingUnitId,
+				target = bestTarget,
+				origin = {
+					type = "SYSTEM",
+					playerId = nil
+				},
+				policy = "AUTO"
+			},
+			isValid = true
+		}}
 	else
 		return {eventFactory.createUnitIdleEvent(0, event.data.aggroingUnitId)}
 	end

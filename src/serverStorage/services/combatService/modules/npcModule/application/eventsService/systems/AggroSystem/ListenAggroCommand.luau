@@ -20,7 +20,23 @@ function module.handleEvent(event : commandTypes.UnitAggroCommand, context)
     if not target.isPlaced then return {generateCommandFailEvent("TARGET_NOT_PLACED")} end
     if not target.isEnemy then return {generateCommandFailEvent("TARGET_NOT_ENEMY")} end
     
-    return {generateCommandSuccessEvent(event, context)}
+    local aggroIntent = {
+        delay = 0,
+        eventType = "UnitAggroIntentEvent",
+        type = "EVENT",
+        data = {
+            source = event.data.unitId,
+            target = event.data.targetId,
+            origin = {
+                type = "PLAYER",
+                playerId = event.data.playerId
+            },
+            policy = "COMMAND"
+        },
+        isValid = true
+    }
+    
+    return {aggroIntent}
 
 end
 
@@ -33,18 +49,6 @@ function generateCommandFailEvent(reason : string, event, context)
             unitId = event.data.unitId,
             targetId = event.data.targetId,
             reason = reason
-        }
-    }
-end
-
-function generateCommandSuccessEvent(event, context)
-    return {
-        delay = 0,
-        eventType = "UnitAggroCommandSuccess",
-        type = "EVENT",
-        data = {
-            unitId = event.data.unitId,
-            targetId = event.data.targetId
         }
     }
 end

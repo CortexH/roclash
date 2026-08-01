@@ -25,8 +25,6 @@ function module.handle(event : combatEventTypes.unitStructureBlockingPathEvent, 
 		event.data.unitId,
 		event.data.blockerId
 		)}
-	
-	
 end
 
 return module

@@ -21,3 +21,4 @@ function module.apply(event : combatEventTypes.UnitAggroStartedEvent, context)
 end
 
 return module
+

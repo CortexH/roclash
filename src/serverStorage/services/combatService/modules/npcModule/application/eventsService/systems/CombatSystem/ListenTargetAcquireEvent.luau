@@ -7,6 +7,7 @@ local targetingService = require(domain.service.TargetingService)
 local eventService = require(domain.service.NpcEventFactory)
 
 local combatEventTypes = require(game.ServerStorage.Server.services.combatService.shared.eventTypes.CombatEvents)
+local attackIntentTypes = require(game.ServerStorage.Server.services.combatService.shared.eventTypes.intents.AttackIntentEvent)
 
 local viewPort = require(domain.ports.BattleViewPort)
 local brainPort = require(domain.ports.NpcBrainPort)
@@ -22,12 +23,30 @@ function module.handle(event : combatEventTypes.targetAcquiredEvent, context)
 	local brain = brainPort.getNpcBrain(event.data.unitId, context)
 	if not brain then return {} end
 	
-	local self = viewPort.getSelfBattleView(event.data.unitId, context)
-	if not self.canAttack then return {} end
+	if not brain:getTargeting():isActiveTarget(event.data.targetId) then return {} end
 	
-	if not brain:getTargeting():isActiveTarget(event.data.targetId) then return {} end	
-	
-	return { eventService.createAttackStartedEvent(0, event.data.unitId, event.data.targetId) }
+	-- Dispara um AttackIntent em vez de um AttackStarted direto
+	local intent : attackIntentTypes.AttackIntent = {
+		delay = 0,
+		eventType = "AttackIntent",
+		type = "EVENT",
+		data = {
+			source = event.data.unitId,
+			target = {
+				targetType = "UNIT",
+				id = event.data.targetId,
+				position = {x = 0, y = 0}
+			},
+			origin = {
+				type = "SYSTEM",
+				playerId = nil
+			}
+		},
+		isValid = true
+	}
+
+	return { intent }
 end
 
 return module
+

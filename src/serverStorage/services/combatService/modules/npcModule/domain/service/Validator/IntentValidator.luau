@@ -3,17 +3,17 @@ local module = {}
 local viewPort = require(script.Parent.Parent.Parent.ports.BattleViewPort)
 
 function module.canPerformAction(unitId: string, targetId: string, context: any, range: number)
-    -- O npcModule só enxerga o mundo através do BattleViewPort!
+
     local selfView = viewPort.getSelfBattleView(unitId, context)
     local targetView = viewPort.getUnitBattleView(unitId, targetId, context)
 
     -- 1. Validação Básica de Existência e Vida
     if not selfView or not selfView.isAlive then return false, "SOURCE_INVALID" end
     if not targetView or not targetView.isAlive then return false, "TARGET_INVALID" end
+
     -- 2. Validação de Estado do Atacante
     if not selfView.isPlaced then return false, "SOURCE_NOT_PLACED" end
-    if not selfView.canAttack then return false, "ACTION_BLOCKED" end
-    if selfView.cooldownRemaining > 0 then return false, "ON_COOLDOWN" end
+    --if selfView.cooldownRemaining > 0 then return false, "ON_COOLDOWN" end
 
     -- 3. Validação de Alvo (Contexto de Combate)
     if not targetView.isPlaced then return false, "TARGET_NOT_PLACED" end

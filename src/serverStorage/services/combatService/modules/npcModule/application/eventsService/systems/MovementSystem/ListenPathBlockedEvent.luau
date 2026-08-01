@@ -27,8 +27,8 @@ function module.handle(event : combatEventTypes.unitStructureBlockingPathEvent, 
 	local currentAggro = brain:getAggro():getCurrentAggro()
 	if currentAggro then
 
-		return { eventService.createMovementRequestEvent(
-			0, event.data.unitId, nil, currentAggro
+		return { eventService.createMovementIntent(
+			0, event.data.unitId, nil, currentAggro, "PATH_BLOCKED"
 			) }
 	end
 
