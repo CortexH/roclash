@@ -13,8 +13,8 @@ function module.apply(event : eventType.unitSpawnedEvent, context)
 	
 	local suc, err = unit:place(
 		event.data.position,
-		0,
-		mapAPI.getPositionFromCell(event.data.position), 
+		event.data.rotation or 0,
+		mapAPI.getPositionFromCell(event.data.position),
 		event.data.behavior
 	)
 		
