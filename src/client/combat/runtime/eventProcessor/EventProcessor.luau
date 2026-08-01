@@ -2,7 +2,8 @@ local module = {}
 
 local appliers = {
 	require(script.Parent.client.ClientEventApplier),
-	require(script.Parent.ui.UiEventApplier)
+	require(script.Parent.ui.UiEventApplier),
+	require(script.Parent.interaction.InteractionApplier)
 }
 local systems = {
 	require(script.Parent.client.ClientEventListenerSystem)

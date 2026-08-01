@@ -12,7 +12,7 @@ local interactionState = require(script.Parent.Parent.state.InteractionState)
 local storedUnitsState = require(script.Parent.Parent.state.StoredUnitsCache)
 local mapUtils = require(game.ReplicatedStorage.Shared.combat.shared.utils.PlayerMapUtils)
 
-local eventsAPI = require(game.ReplicatedStorage.Shared.combat.shared.API.Remotes)
+local eventsAPI = require(script.Parent.Parent.network.CommandSender)
 
 local conns = {}
 
@@ -21,14 +21,14 @@ local currentModel = nil
 function module.beginSpawn()
 		
 	local mouseConn = mouse.Move:Connect(function()
-		local x, y = mouse.Hit.X, mouse.Hit.Z		
-		interactionState.clientState.placementMode.currentPointedCell = 
+		local x, y = mouse.Hit.X, mouse.Hit.Z
+		interactionState.clientState.placementMode.currentPointedCell =
 			mapUtils.getCellByPosition({x = x, y = y}, mapConsts)
 	end)
 	
 	local clickConn = mouse.Button1Down:Connect(function()
 		local x, y = mouse.Hit.X, mouse.Hit.Z
-		interactionState.clientState.placementMode.currentPointedCell = 
+		interactionState.clientState.placementMode.currentPointedCell =
 			mapUtils.getCellByPosition({x = x, y = y}, mapConsts)
 		triggerSpawn()
 	end)
@@ -41,7 +41,8 @@ end
 
 function triggerSpawn()	
 	local request = buildRequest(storedUnitsState.getRandom(gameConsts.consts.seed))
-	eventsAPI.commands.CommandSender:FireServer(request)
+	print(request)
+	eventsAPI.sendCommand(request)
 end
 
 function module.stopSpawn()
@@ -64,8 +65,9 @@ function buildRequest(unitId)
 			behavior = interactionState.clientState.placementMode.currentBehavior,
 			position = interactionState.clientState.placementMode.currentPointedCell
 		}}
-
 	}
+
+	print(request)
 
 	return request
 end

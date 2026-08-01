@@ -1,19 +1,21 @@
 local module = {}
 
 local PrimaryButton = require(script.Parent.Parent.Parent.Parent.assets.components.buttons.PrimaryButton)
+local UnitCard = require(script.Parent.Parent.components.UnitCard)
 
 export type Behavior = "PEACEFUL" | "DEFENSIVE" | "AGGRESSIVE"
 export type screen = typeof(module.build())
 
 local BEHAVIOR_BUTTON_SIZE = UDim2.fromOffset(132, 40)
+local SELECT_BUTTON_SIZE = UDim2.fromOffset(132, 40)
+local PLACE_UNIT_COLOR = Color3.fromRGB(88, 158, 255)
+local SELECT_BUTTON_COLOR = Color3.fromRGB(120, 180, 100)
 
 local BEHAVIOR_COLORS: { [Behavior]: Color3 } = {
     PEACEFUL = Color3.fromRGB(56, 168, 128),
     DEFENSIVE = Color3.fromRGB(78, 138, 220),
     AGGRESSIVE = Color3.fromRGB(220, 92, 78),
 }
-
-local PLACE_UNIT_COLOR = Color3.fromRGB(88, 158, 255)
 
 local function applyButtonConstraints(button: TextButton, minSize: Vector2, maxSize: Vector2, maxTextSize: number?)
     local sizeConstraint = Instance.new("UISizeConstraint")
@@ -47,14 +49,15 @@ function module.build(root)
     frame.BackgroundTransparency = 1
     frame.Parent = root
 
-    local controlsAnchor = Instance.new("Frame")
-    controlsAnchor.Name = "ControlsAnchor"
-    controlsAnchor.Size = UDim2.fromOffset(460, 0)
-    controlsAnchor.AutomaticSize = Enum.AutomaticSize.Y
-    controlsAnchor.AnchorPoint = Vector2.new(0.5, 1)
-    controlsAnchor.Position = UDim2.new(0.5, 0, 1, -28)
-    controlsAnchor.BackgroundTransparency = 1
-    controlsAnchor.Parent = frame
+    -- Main controls frame
+    local controlsFrame = Instance.new("Frame")
+    controlsFrame.Name = "MainControls"
+    controlsFrame.Size = UDim2.fromOffset(460, 0)
+    controlsFrame.AutomaticSize = Enum.AutomaticSize.Y
+    controlsFrame.AnchorPoint = Vector2.new(0.5, 1)
+    controlsFrame.Position = UDim2.new(0.5, 0, 1, -28)
+    controlsFrame.BackgroundTransparency = 1
+    controlsFrame.Parent = frame
 
     local controlsLayout = Instance.new("UIListLayout")
     controlsLayout.FillDirection = Enum.FillDirection.Vertical
@@ -62,15 +65,16 @@ function module.build(root)
     controlsLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
     controlsLayout.SortOrder = Enum.SortOrder.LayoutOrder
     controlsLayout.Padding = UDim.new(0, 10)
-    controlsLayout.Parent = controlsAnchor
+    controlsLayout.Parent = controlsFrame
 
+    -- Behavior panel
     local behaviorContainer = Instance.new("Frame")
     behaviorContainer.Name = "BehaviorContainer"
     behaviorContainer.LayoutOrder = 1
     behaviorContainer.Size = UDim2.fromOffset(460, 40)
     behaviorContainer.BackgroundTransparency = 1
     behaviorContainer.Visible = false
-    behaviorContainer.Parent = controlsAnchor
+    behaviorContainer.Parent = controlsFrame
 
     local behaviorLayout = Instance.new("UIListLayout")
     behaviorLayout.FillDirection = Enum.FillDirection.Horizontal
@@ -88,6 +92,7 @@ function module.build(root)
     local aggressiveButton = createBehaviorButton("AggressiveButton", "Aggressive", 3, BEHAVIOR_COLORS.AGGRESSIVE)
     aggressiveButton.Parent = behaviorContainer
 
+    -- Place unit button
     local placeUnitButton = PrimaryButton.create({
         name = "PlaceUnitButton",
         text = "Place Unit",
@@ -96,17 +101,31 @@ function module.build(root)
     })
     placeUnitButton.LayoutOrder = 2
     applyButtonConstraints(placeUnitButton, Vector2.new(168, 44), Vector2.new(240, 52), 20)
-    placeUnitButton.Parent = controlsAnchor
+    placeUnitButton.Parent = controlsFrame
+
+    -- Select unit button
+    local selectButton = PrimaryButton.create({
+        name = "SelectButton",
+        text = "Select",
+        size = SELECT_BUTTON_SIZE,
+        backgroundColor = SELECT_BUTTON_COLOR,
+    })
+    selectButton.LayoutOrder = 3
+    applyButtonConstraints(selectButton, Vector2.new(108, 36), Vector2.new(160, 44), 16)
+    selectButton.Parent = controlsFrame
 
     return {
         frame = frame,
+        mainControls = controlsFrame,
         placeUnitButton = placeUnitButton,
+        selectButton = selectButton,
         behaviorContainer = behaviorContainer,
         behaviorButtons = {
             PEACEFUL = peacefulButton,
             DEFENSIVE = defensiveButton,
             AGGRESSIVE = aggressiveButton,
         },
+        unitCard = nil,
     }
 end
 

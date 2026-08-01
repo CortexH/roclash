@@ -72,9 +72,6 @@ function module.onUnitClicked()
 	local mouse = pl:GetMouse()
 	local unitId = interactionState.clientState.selection.currentSelectedUnit
 	local unit = viewRegistry.get(unitId)
-	
-	
-	
 end
 
 function getIdFromUnit(item, mouse)

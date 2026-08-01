@@ -26,4 +26,20 @@ function module.get(id) : unitView.unitView
 	return module.registry[id]
 end
 
+function module.getByInstance(item) : unitView.unitView
+	if not item then return nil end
+	
+	local model = item:IsA("Model") and item or item:FindFirstAncestorOfClass("Model")
+	
+	if not model then return nil end
+		
+	local config = model:FindFirstChild("Configuration")
+
+	local uniqueId = config and config:FindFirstChild("uniqueId")
+		
+	if not uniqueId then return nil end
+
+	return module.get(uniqueId.Value)
+end
+
 return module
