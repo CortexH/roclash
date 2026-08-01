@@ -10,8 +10,12 @@ local positionService = require(script.Parent.Parent.Parent.Parent.Parent.applic
 api.isCellWalkable = function(cell, context)
 	local unitsInCell = context["UnitsBC"]:getActiveUnitByCell(cell)
     for _, unit in pairs(unitsInCell) do
+		if unit:isDead() then continue end
         local blockType = unit:getStructureConfig() and unit:getStructureConfig():getBlockCellType()
-        if blockType == "ENTIRE_CELL" or blockType == "ONLY_CENTER" then
+        if
+        blockType == "ENTIRE_CELL"
+        or blockType == "ONLY_CENTER"
+        then
             return false
         end
     end

@@ -58,26 +58,79 @@ port.isCellWalkable = function(cell, context)
 	return mapAPI.isCellWalkable(cell, context)
 end
 
--- TODO: ajustar caso onde celulas adjacentes perpendiculares retornam nil
+-- Detecta uma Wall (BORDER) bloqueando a transição entre cellA e cellB.
+-- A barreira pode estar em duas posições:
+--   * borda de cellA voltada para cellB (facing = direção do deslocamento)
+--   * borda de cellB voltada para cellA (facing = direção oposta)
+-- Convenção de facing: WEST=0, NORTH=1, EAST=2, SOUTH=3
 port.hasWallOnBorder = function(cellA, cellB, context)
 	local dx = cellB.x - cellA.x
 	local dy = cellB.y - cellA.y
 
-	local borderFacing
-	if dx == 1 then borderFacing = 2
-	elseif dx == -1 then borderFacing = 0
-	elseif dy == 1 then borderFacing = 1
-	elseif dy == -1 then borderFacing = 3
+	local facingOut
+	if dx == 1 then facingOut = 2       -- EAST
+	elseif dx == -1 then facingOut = 0  -- WEST
+	elseif dy == 1 then facingOut = 1   -- NORTH
+	elseif dy == -1 then facingOut = 3  -- SOUTH
+	else
+		-- não é uma transição ortogonal entre células vizinhas
+		return false, nil
 	end
 
-	local unitsInCell = context.UnitsBC:getActiveUnitByCell(cellA)
-	for _, unit in pairs(unitsInCell) do
-		if unit:getStructureConfig() and 
-			unit:getStructureConfig():getBlockCellType() == "BORDER" then
-			if unit:getFacing() == borderFacing then
+	local facingIn = (facingOut + 2) % 4
+
+	local function findBorderWall(cell, facing)
+		local unitsInCell = context.UnitsBC:getActiveUnitByCell(cell)
+		for _, unit in pairs(unitsInCell) do
+			if not unit:isDead()
+				and unit:getStructureConfig()
+				and unit:getStructureConfig():getBlockCellType() == "BORDER"
+				and unit.currentFacing == facing then
 				return true, unit:getId()
 			end
 		end
+
+		return false, nil
+	end
+
+	local hasWall, wallId = findBorderWall(cellA, facingOut)
+	if hasWall then
+		return true, wallId
+	end
+
+	return findBorderWall(cellB, facingIn)
+end
+
+-- Verifica se existe uma Wall bloqueando o caminho de `cell` até `goal`,
+-- percorrendo as bordas cruzadas passo a passo (eixo dominante por iteração).
+-- Isso garante detecção mesmo em transições diagonais ou com múltiplas células de distância.
+port.hasWallToward = function(cell, goal, context)
+	local dx = goal.x - cell.x
+	local dy = goal.y - cell.y
+
+	if dx == 0 and dy == 0 then
+		return false, nil
+	end
+
+	local curr = {x = cell.x, y = cell.y}
+
+	while curr.x ~= goal.x or curr.y ~= goal.y do
+		local remX = goal.x - curr.x
+		local remY = goal.y - curr.y
+
+		local next
+		if math.abs(remX) >= math.abs(remY) then
+			next = {x = curr.x + (remX > 0 and 1 or -1), y = curr.y}
+		else
+			next = {x = curr.x, y = curr.y + (remY > 0 and 1 or -1)}
+		end
+
+		local hasWall, wallId = port.hasWallOnBorder(curr, next, context)
+		if hasWall then
+			return true, wallId
+		end
+
+		curr = next
 	end
 
 	return false, nil

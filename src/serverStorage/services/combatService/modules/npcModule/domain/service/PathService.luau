@@ -4,6 +4,7 @@ export type AStarRequest = {
 	unitId: string,          -- quem está se movendo
 	fromCell: {x: number, y: number},  -- célula atual do NPC
 	toCell: {x: number, y: number},    -- célula do alvo de aggro
+	toTargetCell: {x: number, y: number}?,  -- célula real do alvo (ex: Tower)
 }
 
 export type AStarSegment = {
@@ -22,6 +23,7 @@ local mapPort = require(script.Parent.Parent.ports.MapPort)
 function module.AStarPathRequest(request : AStarRequest, context) : AStarResult
 	local fromCell = request.fromCell
 	local toCell = request.toCell
+	local toTargetCell = request.toTargetCell
 
 	local openList = {}
 	local closedList = {}
@@ -56,6 +58,12 @@ function module.AStarPathRequest(request : AStarRequest, context) : AStarResult
 
 	local function sameDirection(d1, d2)
 		return d1.x == d2.x and d1.y == d2.y
+	end
+
+	-- Descobre a Wall (BORDER) que bloqueia o caminho de `cell` em direção ao `goal`.
+	-- Percorre as bordas cruzadas até o alvo, cobrindo transições ortogonais e diagonais.
+	local function findBlockerToward(cell, goal)
+		return mapPort.hasWallToward(cell, goal, context)
 	end
 
 	local function reconstructRawPath(endCell)
@@ -107,6 +115,17 @@ function module.AStarPathRequest(request : AStarRequest, context) : AStarResult
 		return segments
 	end
 
+	local function applyBlockerToLastSegment(segments, goalCell)
+		if #segments == 0 then return end
+
+		local last = segments[#segments]
+		local hasWall, wallId = findBlockerToward(last.toCell, goalCell)
+
+		if hasWall then
+			last.blocker = wallId
+		end
+	end
+
 	local startKey = cellKey(fromCell)
 	local goalKey = cellKey(toCell)
 
@@ -126,14 +145,9 @@ function module.AStarPathRequest(request : AStarRequest, context) : AStarResult
 			local rawPath = reconstructRawPath(currentCell)
 			local segments = compressPath(rawPath)
 
-			-- verifica blocker no último segmento
-			if #segments > 0 then
-				local last = segments[#segments]
-				local hasWall, wallId = mapPort.hasWallOnBorder(last.fromCell, last.toCell, context)
-
-				if hasWall then
-					last.blocker = wallId
-				end
+			-- Wall além do goal só é relevante quando existe um alvo real (ex: Tower)
+			if toTargetCell then
+				applyBlockerToLastSegment(segments, toTargetCell)
 			end
 
 			return {
@@ -148,6 +162,12 @@ function module.AStarPathRequest(request : AStarRequest, context) : AStarResult
 			local neighborKey = cellKey(neighbor)
 
 			if not closedList[neighborKey] and mapPort.isCellWalkable(neighbor, context) then
+				-- não atravessa bordas bloqueadas por Walls (BORDER)
+				local hasWall = mapPort.hasWallOnBorder(currentCell, neighbor, context)
+				if hasWall then
+					continue
+				end
+
 				local tentativeG = gScore[currentKey] + 1
 
 				if not gScore[neighborKey] or tentativeG < gScore[neighborKey] then
@@ -187,6 +207,24 @@ function module.AStarPathRequest(request : AStarRequest, context) : AStarResult
 
 	local rawPath = reconstructRawPath(bestCell)
 	local segments = compressPath(rawPath)
+
+	-- Se não foi possível gerar segmentos (ex: unit já está colada no obstáculo),
+	-- ainda assim identifica o blocker na direção do alvo.
+	if #segments == 0 then
+		local hasWall, wallId = mapPort.hasWallToward(bestCell, toTargetCell or toCell, context)
+		if hasWall then
+			segments = {
+				{
+					fromCell = bestCell,
+					toCell = bestCell,
+					blocker = wallId
+				}
+			}
+		end
+	else
+		-- blocker no último segmento: wall que impede o avanço em direção ao alvo
+		applyBlockerToLastSegment(segments, toTargetCell or toCell)
+	end
 
 	return {
 		path = segments,
