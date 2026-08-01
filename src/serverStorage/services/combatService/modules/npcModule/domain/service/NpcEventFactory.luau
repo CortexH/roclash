@@ -2,7 +2,7 @@ local module = {}
 
 local combatEventTypes = require(game.ServerStorage.Server.services.combatService.shared.eventTypes.CombatEvents)
 
-function module.createUnitAggroStartedEvent(delay, aggroingUnit, target)
+function module.createUnitAggroStartedEvent(delay, aggroingUnit, target, aggroingUnitMovementVersion, aggroedUnitMovementVersion)
 	return {
 		["delay"] = delay,
 		["eventType"] = "UnitAggroStartedEvent",
@@ -10,8 +10,8 @@ function module.createUnitAggroStartedEvent(delay, aggroingUnit, target)
 		["data"] = {
 			["aggroingUnitId"] = aggroingUnit,
 			["aggroedUnitId"] = target,
-			--["aggroingUnitMovementVersion"] = string,
-			--["aggroedUnitMovementVersion"] = string
+			["aggroingUnitMovementVersion"] = aggroingUnitMovementVersion or "",
+			["aggroedUnitMovementVersion"] = aggroedUnitMovementVersion or ""
 		},
 		["isValid"] = true
 	}
@@ -80,16 +80,61 @@ function module.createUnitMovementPlanningEvent(delay, unitId, firstCell, path, 
 	}
 end
 
-function module.createMovementRequestEvent(delay, unitId, targetCell, targetUnit) : combatEventTypes.unitMovementRequestedEvent
+function module.createMovementIntent(delay, unitId, targetCell, targetUnit, reason)
 	return {
-		["eventType"] = "UnitMovementRequestedEvent",
+		["eventType"] = "MovementIntent",
 		["delay"] = delay,
 		["type"] = "EVENT",
 		["data"] = {
 			["unitId"] = unitId,
 			["targetCell"] = targetCell,
-			["targetUnit"] = targetUnit
-		}
+			["targetUnit"] = targetUnit,
+			["reason"] = reason
+		},
+		["isValid"] = true
+	}
+end
+
+function module.createMovementIntentAccepted(delay, unitId, targetCell, targetUnit, reason)
+	return {
+		["eventType"] = "MovementIntentAccepted",
+		["delay"] = delay,
+		["type"] = "EVENT",
+		["data"] = {
+			["unitId"] = unitId,
+			["targetCell"] = targetCell,
+			["targetUnit"] = targetUnit,
+			["reason"] = reason
+		},
+		["isValid"] = true
+	}
+end
+
+function module.createMovementIntentRejected(delay, unitId, targetCell, targetUnit, reason)
+	return {
+		["eventType"] = "MovementIntentRejected",
+		["delay"] = delay,
+		["type"] = "EVENT",
+		["data"] = {
+			["unitId"] = unitId,
+			["targetCell"] = targetCell,
+			["targetUnit"] = targetUnit,
+			["reason"] = reason
+		},
+		["isValid"] = true
+	}
+end
+
+function module.createVerifyAggroReachedEvent(delay, unitId, movementVersion)
+	return {
+		["eventType"] = "VerifyAggroReachedEvent",
+		["delay"] = delay,
+		["type"] = "EVENT",
+		["data"] = {
+			["unitId"] = unitId,
+			["movementVersion"] = movementVersion
+		},
+		["isValid"] = true
 	}
 end
 
@@ -122,8 +167,43 @@ function module.createAttackStartedEvent(delay, unitId, targetId)
 	}	
 end
 
+function module.createAttackIntentFailed(sourceId, targetId, reason, originType, playerId)
+	return {
+		["eventType"] = "AttackIntentFailed",
+		["delay"] = 0,
+		["type"] = "EVENT",
+		["data"] = {
+			["source"] = sourceId,
+			["target"] = {
+				["targetType"] = "UNIT",
+				["id"] = targetId,
+				["position"] = {x = 0, y = 0}
+			},
+			["origin"] = {
+				["type"] = originType or "SYSTEM",
+				["playerId"] = playerId or nil
+			},
+			["reason"] = reason
+		},
+		["isValid"] = true
+	}
+end
+
+function module.createAttackIntentAccepted(source, target)
+	return {
+		["eventType"] = "AttackIntentAccepted",
+		["delay"] = 0,
+		["type"] = "EVENT",
+		["data"] = {
+			["source"] = source,
+			["target"] = target
+		}
+	}
+end
+
 function module.createUnitIdleEvent()
 	return {}
 end
 
 return module
+

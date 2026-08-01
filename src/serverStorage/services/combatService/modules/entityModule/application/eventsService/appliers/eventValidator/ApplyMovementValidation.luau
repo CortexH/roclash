@@ -12,16 +12,14 @@ local eventFactory = require(game.ServerStorage.Server.services.combatService.sh
 local mapPort = require(domain.ports.gateways.MapGatewayPort)
 
 function module.applyMovementInterrupted(event : combatEventTypes.unitMovementInterruptedEvent, context)
-	--[[local unitsBC = context["UnitsBC"]
+	local unitsBC = context["UnitsBC"]
 	local unit : unitEntity.unitEntity = unitsBC:getActiveUnitById(event.data.unitId)
 	
-	if unit:getAttacker():getVersioning():getMovementVersion() ~= event.data.movementVersion then 
+	if unit:getAttacker():getVersioning():getMovementVersion() ~= event.data.movementVersion then
 		event.isValid = false
 		event.shouldRender = false
 		return
 	end
-	]]
-	
 end
 
 function module.applyMovementResolved(event : eventType.unitMovementResolvedEvent, context)
@@ -39,10 +37,23 @@ function module.applyMovementStarted(event : eventType.unitMovementStartedEvent,
 	local unitsBC = context["UnitsBC"]
 	local unit : unitEntity.unitEntity = unitsBC:getActiveUnitById(event.data.unitId)
 		
-	if unit:getAttacker():getVersioning():getMovementVersion() ~= event.data.unitVersion then 
-		event.isValid = false 
+	if unit:getAttacker():getVersioning():getMovementVersion() ~= event.data.unitVersion then
+		event.isValid = false
 		event.shouldRender = false
 		return
+	end
+end
+
+-- Invalida VerifyAggroReachedEvent pertencente a uma cadeia de movimento obsoleta
+-- (ex: após mudança de aggro/target, quando a movementVersion foi incrementada).
+function module.applyVerifyAggroReachedEvent(event : combatEventTypes.verifyAggroReachedEvent, context)
+	local unitsBC = context["UnitsBC"]
+	local unit : unitEntity.unitEntity = unitsBC:getActiveUnitById(event.data.unitId)
+
+	if not unit or not unit:getAttacker()
+		or unit:getAttacker():getVersioning():getMovementVersion() ~= event.data.movementVersion then
+		event.isValid = false
+		event.shouldRender = false
 	end
 end
 

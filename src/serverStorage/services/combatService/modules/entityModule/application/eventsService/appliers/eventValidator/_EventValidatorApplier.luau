@@ -8,6 +8,7 @@ module.applies = {
 	["UnitMovementStartedEvent"] = movement.applyMovementStarted,
 	["UnitMovementResolvedEvent"] = movement.applyMovementResolved,
 	["UnitMovementInterruptedEvent"] = movement.applyMovementInterrupted,
+	["VerifyAggroReachedEvent"] = movement.applyVerifyAggroReachedEvent,
 	
 	["CooldownReadyEvent"] = combat.applyCooldownReady,
 	["AttackStartedEvent"] = combat.applyAttackStarted,

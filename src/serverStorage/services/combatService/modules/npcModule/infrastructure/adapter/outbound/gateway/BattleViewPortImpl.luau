@@ -15,7 +15,7 @@ local unitEntity = require(game.ServerStorage.Server.services.combatService.modu
 port.getSelfBattleView = function(selfId, context)
 	local ct = context["TimeBC"].currentTime
 	local unit : unitEntity.unitEntity = context["UnitsBC"]:getUnit(selfId)
-		
+
 	local view : selfView.SelfBattleView = {
 		id = selfId,
 		
@@ -56,10 +56,8 @@ port.getSelfBattleView = function(selfId, context)
 		view.aggroRange = unit:getNpcConfig():getAggroRange()
 		view.aggroBehavior = unit:getNpcConfig():getBehavior()
 		
-		local cd = ((unit:getAttacker():getLastAttackTime() or 0) + unit:getAttacker():getAttackCooldownTime()) - context["TimeBC"].currentTime
-		view.canAttack = cd + unit:getAttacker():getAttackerConfig():getTotalAttackTime() <= 0
-		if cd < 0 then cd = 0 end
-		view.cooldownRemaining = cd
+		view.canAttack = unit:getAttacker():canAttack(ct)
+		view.cooldownRemaining = unit:getAttacker():getRemainingCooldown(ct)
 		
 		view.maxTargets = unit:getAttacker():getAttackerConfig():getMaxTargets()
 		view.targetingPriority = "NEAREST" -- TODO: colocar algo para permitir adicionar mais targetingBehaviors
@@ -67,6 +65,21 @@ port.getSelfBattleView = function(selfId, context)
 	end
 		
 	return view
+end
+
+port.getUnitVersionView = function(unitId, context)
+	local unit : unitEntity.unitEntity = context["UnitsBC"]:getActiveUnitById(unitId)
+	if not unit or not unit:getAttacker() then return nil end
+
+	local versioning = unit:getAttacker():getVersioning()
+
+	return {
+		id = unitId,
+		movementVersion = versioning:getMovementVersion(),
+		aggroVersion = versioning:getAggroVersion(),
+		attackVersion = versioning:getAttackVersion(),
+		lifeVersion = versioning:getLifeVersion(),
+	}
 end
 
 port.getUnitBattleView = function(selfId, unitId, context)
@@ -101,7 +114,7 @@ port.getUnitBattleView = function(selfId, unitId, context)
 		view.distanceToSelf = self:getPosition():getCurrentPosition(ct)
 			:distanceTo(unit:getPosition():getCurrentPosition(ct))
 		
-		view.inRange = self:isInRange(unit:getPosition():getCurrentPosition(ct))
+		view.inRange = self:isInRange(unit:getPosition():getCurrentPosition(ct), ct)
 	end
 	
 	return view

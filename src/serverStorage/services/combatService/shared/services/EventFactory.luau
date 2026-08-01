@@ -62,7 +62,7 @@ function module.createUnitIdleEvent(delay, unitId)
 end
 
 function module.createMovementInterruptedEvent(
-	delay, unitId, version, finalPos
+	delay, unitId, version, finalPos, reason
 )
 	return {
 		["eventType"] = "UnitMovementInterruptedEvent",
@@ -70,23 +70,10 @@ function module.createMovementInterruptedEvent(
 		["type"] = "EVENT",
 		["data"] = {
 			["unitId"] = unitId,
-			["finalPos"] = finalPos
+			["finalPos"] = finalPos,
+			["reason"] = reason
 		},
 		["isValid"] = true
-	}
-end
-
-function module.createUnitMovementIntentEvent(delay, unitId, firstCell, path, reachable)
-	return {
-		["eventType"] = "UnitMovementIntentEvent",
-		["delay"] = delay,
-		["type"] = "EVENT",
-		["data"] = {
-			["startCell"] = firstCell,
-			["unitId"] = unitId,
-			["path"] = path,
-			["reachable"] = reachable
-		}
 	}
 end
 
@@ -111,6 +98,19 @@ function module.createUnitReachedAggroEvent(delay, unitId, unitVersion)
 		["data"] = {
 			["aggroVersion"] = unitVersion,
 			["unitId"] = unitId
+		},
+		["isValid"] = true
+	}
+end
+
+function module.createVerifyAggroReachedEvent(delay, unitId, movementVersion)
+	return {
+		["eventType"] = "VerifyAggroReachedEvent",
+		["delay"] = delay,
+		["type"] = "EVENT",
+		["data"] = {
+			["unitId"] = unitId,
+			["movementVersion"] = movementVersion
 		},
 		["isValid"] = true
 	}

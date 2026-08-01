@@ -110,37 +110,8 @@ export type unitIdleEvent = {
 	}
 }
 
-export type unitMovementRequestedEvent = {
-	["eventType"] : "UnitMovementRequestedEvent",
-	["delay"] : number,
-	["type"] : "EVENT",
-	["data"] : {
-		["unitId"] : string,
-		["targetCell"] : {x : number, y : number}?,
-		["targetUnit"] : string
-	}
-}
-
 export type unitMovementPlanningEvent = {
 	["eventType"] : "UnitMovementPlanningEvent",
-	["delay"] : number,
-	["type"] : "EVENT",
-	["data"] : {
-		["unitId"] : string,
-		["startCell"] : string,
-		["path"] : {
-			{
-				["fromCell"] : {x : number, y : number},
-				["toCell"] : {x : number, y : number},
-				["blocker"] : string?
-			}
-		},
-		["reachable"] : boolean
-	}
-}
-
-export type unitMovementIntentEvent = {
-	["eventType"] : "UnitMovementIntentEvent",
 	["delay"] : number,
 	["type"] : "EVENT",
 	["data"] : {
@@ -168,16 +139,15 @@ export type unitReachedAggroEvent = {
 	["isValid"] : boolean
 }
 
-export type UnitAggroStartedEvent = {
+export type verifyAggroReachedEvent = {
+	["eventType"] : "VerifyAggroReachedEvent",
 	["delay"] : number,
-	["eventType"] : "UnitAggroStartedEvent",
 	["type"] : "EVENT",
 	["data"] : {
-		["aggroingUnitId"] : string,
-		["aggroedUnitId"] : string,
-		["aggroingUnitVersion"] : string,
-		["aggroedUnitVersion"] : string
-	}
+		["unitId"] : string,
+		["movementVersion"] : number
+	},
+	["isValid"] : boolean
 }
 
 export type unitMovementSegmentEvent = {
@@ -284,3 +254,4 @@ export type cooldownReadyEvent = {
 }
 
 return module
+
