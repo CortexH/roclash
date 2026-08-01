@@ -17,7 +17,7 @@ function module.generateData(soldiersQuantity : number)
 			["maxHealth"] = 300,
 			["damageType"] = 1,
 			["aggroRange"] = 20 * 4,
-			["attackDamage"] = 100,
+			["attackDamage"] = 150,
 			["attackSpeed"] = 30,
 			["attackRange"] = 6,
 			["sword"] = 1,

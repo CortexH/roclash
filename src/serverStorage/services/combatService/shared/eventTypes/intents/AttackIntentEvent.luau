@@ -1,5 +1,8 @@
 local module = {}
 
+-- Definição dos motivos de falha centralizada
+export type AttackIntentReason = "OUT_OF_RANGE" | "TARGET_DEAD" | "COOLDOWN_NOT_READY" | "INVALID_TARGET"
+
 export type AttackIntent = {
     ["delay"] : number,
 	["eventType"] : "AttackIntent",
@@ -21,7 +24,7 @@ export type AttackIntent = {
 
 export type AttackIntentFailed = {
     ["delay"] : number,
-	["eventType"] : "AttackIntent",
+	["eventType"] : "AttackIntentFailed",
 	["type"] : "EVENT",
 	["data"] : {
 		["source"] : string,
@@ -34,9 +37,24 @@ export type AttackIntentFailed = {
             type : string,
             playerId : string | nil
         },
-        ["reason"] : string
+        ["reason"] : AttackIntentReason
 	},
 	["isValid"] : boolean
+}
+
+export type AttackIntentAccepted = {
+    ["delay"] : number,
+    ["eventType"] : "AttackIntentAccepted",
+    ["type"] : "EVENT",
+    ["data"] : {
+        ["source"] : string,
+        ["target"] : {
+            ["targetType"] : "POSITION" | "UNIT",
+            ["id"] : string | nil,
+            ["position"] : {x:number,y:number} | nil
+        }
+    },
+    ["isValid"] : boolean
 }
 
 return module

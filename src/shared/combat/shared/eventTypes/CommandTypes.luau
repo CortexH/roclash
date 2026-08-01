@@ -8,8 +8,14 @@ export type spawnUnitCommand = {
 			id : string,
 			behavior : string,
 			position : {x : number, y : number}
-		}	
+		}
 	}
+}
+
+export type unitSelectCommand = {
+	type : "SELECT_UNIT",
+	target : "UNIT",
+	unitId : string
 }
 
 export type unitAggroCommand = {
