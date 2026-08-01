@@ -30,7 +30,7 @@ function module.enqueueEvent(request : eventQueueAPI.request)
 		return
 	end
 
-	local activeQueue = activeQueues.getActiveQueue(request.targetQueue)
+	local activeQueue : eventQueue.queue = activeQueues.getActiveQueue(request.targetQueue)
 
 	if not activeQueue then
 		eventLogModule.eventFail(request, "Event Queue com identificador '".. request.targetQueue .."' não encontrada")
@@ -59,7 +59,8 @@ local modulesFolder = game.ServerStorage.Server.services.combatService.modules
 
 local serviceModules = {
 	["entityModule"] = require(modulesFolder.entityModule.EntityModule),
-	["npcModule"] = require(modulesFolder.npcModule.NpcModule)
+	["npcModule"] = require(modulesFolder.npcModule.NpcModule),
+	["interactionModule"] = require(modulesFolder.interactionModule.InteractionModule)
 }
 
 function module.processEvent(event, targetQueue, context)
@@ -76,7 +77,7 @@ function module.processEvent(event, targetQueue, context)
 			table.insert(createdEvents, newEvent)
 		end
 	end
-
+	
 	eventLogModule.eventConsumed(event, targetQueue)
 
 	for _, newEvent in createdEvents do

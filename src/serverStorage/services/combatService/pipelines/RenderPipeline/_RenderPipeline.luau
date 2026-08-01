@@ -27,9 +27,7 @@ function module.processInBatch(events, currentTime)
 end
 
 function module.renderEvents(events, currentTime, clientId)
-	local processedEvents = module.processInBatch(events, currentTime)
-	if #processedEvents < 1 then return end
-	endpoint.data.toFront.packetsEvent:FireClient(playerService:GetPlayerByUserId(clientId), processedEvents, currentTime)
+	return module.processInBatch(events, currentTime)
 end
 
 return module

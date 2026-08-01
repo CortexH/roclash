@@ -18,10 +18,8 @@ local module = {
         UnitDiedEvent = true,
         UnitEnteredTowerRangeEvent = true,
         UnitLeftTowerRangeEvent = true,
-        UnitMovementIntentEvent = true,
         UnitMovementInterruptedEvent = true,
         UnitMovementPlanningEvent = true,
-        UnitMovementRequestedEvent = true,
         UnitMovementResolvedEvent = true,
         UnitMovementSegmentEvent = true,
         UnitMovementStartedEvent = true,
@@ -29,7 +27,12 @@ local module = {
         UnitPlacementCommandResponse = true,
         UnitReachedAggroEvent = true,
         UnitSpawnedEvent = true,
-    }
+        MovementIntent = true,
+        MovementIntentAccepted = true,
+        MovementIntentRejected = true,
+        VerifyAggroReachedEvent = true,
+    },
+    onlyValid = true,
 }
 
 return module

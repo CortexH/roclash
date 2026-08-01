@@ -15,6 +15,7 @@ export type logType = {
 
 function module.eventFail(request, additionalMessage)
 	if monitorParams.eventFailLog == false then return end
+	if monitorParams.onlyValid == true and request.event.isValid == false then return end
 	if not verifyEventType(request.event.eventType) then return end
 	if not request then request = {logType = "NIL REQUEST"} end
 	if not request.targetQueue then request.targetQueue = "nil" end
@@ -40,6 +41,7 @@ end
 
 function module.eventEnqueued(request, additionalMessage)
 	if monitorParams.eventEnqueuedLog == false then return end
+	if monitorParams.onlyValid == true and request.event.isValid == false then return end
 	if not verifyEventType(request.event.eventType) then return end
 
 	local item :logType = {
@@ -60,6 +62,7 @@ end
 
 function module.eventConsumed(event, targetQueue)
 	if monitorParams.eventConsumedLog == false then return end
+	if monitorParams.onlyValid == true and event.isValid == false then return end
 	if not verifyEventType(event.eventType) then return end
 	
 	local item : logType = {

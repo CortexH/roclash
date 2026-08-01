@@ -11,7 +11,10 @@ local activeBattles = require(script.Parent.ActiveBattles)
 local activeQueues = require(script.Parent.ActiveQueues)
 
 local moduleConsts = require(game.ServerStorage.Server.constants.CombatServiceModulesConsts)
+
 local renderPipeline = require(game.ServerStorage.Server.services.combatService.pipelines.RenderPipeline._RenderPipeline)
+local interactionPipeline = require(game.ServerStorage.Server.services.combatService.pipelines.InteractionPipeline._InteractionPipeline)
+local endpoints = require(game.ServerStorage.Server.services.combatService.API.frontEnd.Remotes)
 
 function service.beginCombat(playerId : number, opponentId : number, snapshotNumber : number, attackerData)
 	local battleId = httpService:GenerateGUID(false)
@@ -39,24 +42,42 @@ function service.endCombat(playerId : number)
 end
 
 rs.Heartbeat:Connect(function(dt)
+	local currentTime = os.clock()
 	for _, v in pairs(activeBattles.getActiveBattles()) do
 		if v["BattleStateBC"].status ~= "RUNNING" then continue end
 
-		local currentTime = os.clock()
 		v["TimeBC"].currentTime = currentTime
-		
 		local queue = activeQueues.getActiveQueue(v["IdentityBC"]["attackerPlayerId"])
 		
 		queue:advanceTo(currentTime, function(event)
+			v["TimeBC"].currentTime = event.time
+			
 			local targetQueue = v["IdentityBC"]["attackerPlayerId"]
 			queueApp.processEvent(event, targetQueue, v)
+						
 		end)
 		
 		if #queue:getAllRuntimeEvents() > 0 then
 			print("------------------------------------------------")
 		end
 		
-		renderPipeline.renderEvents(queue:getAllRuntimeEvents(), currentTime, v["IdentityBC"]["attackerPlayerId"])
+		local events = {}
+
+		local renderEvents = renderPipeline.renderEvents(queue:getAllRuntimeEvents(), currentTime, v["IdentityBC"]["attackerPlayerId"])
+		local interactionEvents = interactionPipeline.updatePlayerState(queue:getAllRuntimeEvents(), currentTime)
+		
+		for _, currentEvent in pairs(renderEvents) do
+			table.insert(events, currentEvent)
+		end
+
+		for _, currentEvent in pairs(interactionEvents) do
+			table.insert(events, currentEvent)
+		end
+
+		if #events > 0 then
+			endpoints.data.toFront.packetsEvent:FireClient(game:GetService("Players"):GetPlayerByUserId(v["IdentityBC"]["attackerPlayerId"]), events, currentTime)
+		end
+
 	end
 end)
 
@@ -64,6 +85,7 @@ local mapModule = require(moduleConsts.paths.mapModule.MapModule)
 local entityModule = require(moduleConsts.paths.entityModule.EntityModule)
 local npcModule = require(moduleConsts.paths.npcModule.NpcModule)
 local gameMOdule = require(moduleConsts.paths.gameModule.GameModule)
+local InteractionModule = require(moduleConsts.paths.interactionModule.InteractionModule)
 
 local gameModuleAPI = require(game.ServerStorage.Server.services.combatService.API.gameModule.GameModuleDataAPI)
 
@@ -97,6 +119,6 @@ require(game.ServerStorage.Server.services.combatService.API.frontEnd.Remotes).r
 	queueAPI.enqueueEvent(request)
 end)
 
-require(script.Parent.CommandReceiver)
+require(script.Parent.UserInputReceiver)
 
 return service

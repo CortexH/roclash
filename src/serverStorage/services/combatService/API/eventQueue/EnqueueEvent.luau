@@ -1,5 +1,5 @@
 local module = {
-    enqueueEvent = function() end
+    enqueueEvent = function(item : {request}) end
 }
 
 export type event = {

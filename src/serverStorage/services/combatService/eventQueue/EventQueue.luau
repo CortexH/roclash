@@ -198,6 +198,7 @@ function module:validateEnqueue(event)
 end
 
 function module:getEventTimeByDelay(delay)
+	delay = tonumber(delay)
 
 	if delay < MIN_EVENT_DELAY then
 		delay = MIN_EVENT_DELAY
