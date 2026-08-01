@@ -1,0 +1,20 @@
+# Diretrizes de Economia de Tokens e Desenvolvimento
+
+## 1. Comunicação Direta (Economia de Output)
+- Seja extremamente conciso. Evite saudações, desculpas ou explicações longas do que vai fazer.
+- Vá direto para a solução ou para o código.
+- Não reescreva arquivos inteiros se for alterar apenas algumas linhas. Retorne apenas as funções alteradas ou use Diffs de código.
+
+## 2. Gerenciamento de Contexto (Economia de Input)
+- Consulte o arquivo `@GRAPH_REPORT.md` para entender a arquitetura do projeto. Não leia diretórios inteiros sem necessidade.
+- Não abra ou leia arquivos de mídia, áudios, modelos 3D ou logs.
+- Foque apenas nos scripts Luau estritamente relacionados à tarefa atual.
+
+## 3. Padrões de Código (Roblox / Luau)
+- Escreva código Luau moderno e otimizado.
+
+## 4. Política de Idioma e Nomenclatura
+- **Comunicação:** Use Português (Brasil) para todas as conversas, explicações e comentários nos scripts.
+- **Código (Nomenclatura):** Use estritamente INGLÊS para nomes de variáveis, funções, classes, eventos, pastas e arquivos (ex: use `AggroDistance` em vez de `DistanciaAggro`).
+- **Padrão Roblox:** Siga o padrão PascalCase para funções e membros públicos, e camelCase para variáveis locais (padrão oficial do Roblox).
+- **Keywords:** Mantenha a sintaxe da linguagem Luau (if, then, local, end) inalterada.
