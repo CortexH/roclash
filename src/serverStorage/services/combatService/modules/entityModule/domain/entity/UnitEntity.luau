@@ -54,6 +54,7 @@ function unitEntity.new(
 	self.version = 1
 		
 	self.alive = true
+	self.justDied = false
 	
 	return self
 end
@@ -85,6 +86,7 @@ function unitEntity.newNotPlaced(
 	self.version = 1
 	
 	self.alive = true
+	self.justDied = false
 		
 	return self
 end

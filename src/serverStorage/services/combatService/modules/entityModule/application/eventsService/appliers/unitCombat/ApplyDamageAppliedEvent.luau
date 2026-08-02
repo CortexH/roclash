@@ -10,6 +10,14 @@ function module.apply(event : eventType.damageAppliedEvent, context)
 	local target : unitEntity.unitEntity = unitsBC:getActiveUnitById(event.data.targetId)
 	
 	target:applyDamage(event.data.damage)
+	
+	-- Aplica a transição Alive -> Dead imediatamente no estado, para que
+	-- danos subsequentes no mesmo frame não gerem novas mortes.
+	if target:getHealth() <= 0 and not target:isDead() then
+		target:kill()
+		target.justDied = true
+	end
+	
 	event.shouldRender = true
 end
 

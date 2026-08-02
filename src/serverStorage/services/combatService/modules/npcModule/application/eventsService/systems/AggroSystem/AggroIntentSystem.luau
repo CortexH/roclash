@@ -5,6 +5,7 @@ local AggroValidator = require(domain.service.Validator.AggroValidator)
 local aggroEvents = require(game.ServerStorage.Server.services.combatService.shared.eventTypes.AggroEvents)
 local intentTypes = require(game.ServerStorage.Server.services.combatService.shared.eventTypes.intents.AggroIntentEvent)
 local viewPort = require(domain.ports.BattleViewPort)
+local brainPort = require(domain.ports.NpcBrainPort)
 
 local function createRejected(source, target, reason, origin)
     return {
@@ -43,6 +44,17 @@ function module.handle(event: intentTypes.AggroIntent, context: any)
     -- 1. Validação de entrada
     if not unitId or not targetId then
         return {createRejected(unitId, targetId, "INVALID_INPUT", origin)}
+    end
+
+    -- 1.1 Guard de idempotência: se a unidade já está aggroando este mesmo alvo,
+    -- não re-emitir o aggro (evita o ciclo de re-aggro que gera avalanches de
+    -- UnitAggroStartedEvent a cada ataque resolvido).
+    local brain = brainPort.getNpcBrain(unitId, context)
+    if brain and brain:getAggro() then
+        local currentAggro = brain:getAggro():getCurrentAggro()
+        if currentAggro == targetId then
+            return {}
+        end
     end
 
     -- 2. Pegamos a SelfBattleView
