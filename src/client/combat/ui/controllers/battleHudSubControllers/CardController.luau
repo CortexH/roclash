@@ -47,13 +47,27 @@ function module.showSelectedUnitCard(unitData: UnitCard.UnitCardProps)
 
 end
 
+-- Atualiza o estado observado do card atualmente exibido.
+function module.updateSelectedUnitCard(unitData)
+	if not currentUnitCard then return end
+	if currentUnitCard.unitId ~= unitData.unitId then return end
+
+	if unitData.stats then
+		currentUnitCard:updateHealth(unitData.stats.health, unitData.stats.maxHealth)
+	end
+
+	if unitData.isDead then
+		module.hideSelectedUnitCard()
+	end
+end
+
 function module.hideSelectedUnitCard()
-    if not currentUnitCard then return end
-    currentUnitCard.frame:Destroy()
+	if not currentUnitCard then return end
+	currentUnitCard.frame:Destroy()
 
-    for _, v in conns do v:Disconnect() end
+	for _, v in conns do v:Disconnect() end
 
-    currentUnitCard = nil
+	currentUnitCard = nil
 end
 
 local isAtacarSelected = false

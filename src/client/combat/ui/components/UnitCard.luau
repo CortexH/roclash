@@ -21,6 +21,8 @@ export type UnitCardProps = {
 
 export type UnitCard = typeof(module.new())
 
+module.__index = module
+
 local IconButton = require(script.Parent.Parent.Parent.Parent.assets.components.buttons.IconButton)
 local IconLabel = require(script.Parent.Parent.Parent.Parent.assets.components.labels.IconLabel)
 local ColoredViewport = require(script.Parent.Parent.Parent.Parent.assets.components.viewports.ColoredViewport)
@@ -44,7 +46,7 @@ local function getRarityColor(rarity: string): Color3
 end
 
 function module.new(props: UnitCardProps)
-	local self = {}
+	local self = setmetatable({}, module)
 
 	self.unitId = props.unitId
 
@@ -157,9 +159,10 @@ function module.new(props: UnitCardProps)
 			size = UDim2.fromScale(.5, 1)
 		})
 		stat.Parent = statsFrame
+		return stat
 	end
 
-	addStat("HP", "rbxassetid://10850020485", props.health, props.maxHealth)
+	self.hpLabel = addStat("HP", "rbxassetid://10850020485", props.health, props.maxHealth)
 	addStat("Atk", "rbxassetid://10850021644", props.attackPower)
 	addStat("Rng", "rbxassetid://10850022410", props.attackRange)
 	addStat("Spd", "rbxassetid://10850023245", props.attackSpeed)
@@ -219,6 +222,14 @@ function module.new(props: UnitCardProps)
 	
 	--btnDefender.Parent = actions
 	return self
+end
+
+-- Atualiza o valor de HP exibido no card.
+function module:updateHealth(health, maxHealth)
+	if not self.hpLabel then return end
+	local text = "HP: " .. tostring(health)
+	if maxHealth ~= nil then text = text .. "/" .. tostring(maxHealth) end
+	IconLabel.setText(self.hpLabel, text)
 end
 
 function module:Destroy()

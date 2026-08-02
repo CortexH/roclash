@@ -14,6 +14,7 @@ local moduleConsts = require(game.ServerStorage.Server.constants.CombatServiceMo
 
 local renderPipeline = require(game.ServerStorage.Server.services.combatService.pipelines.RenderPipeline._RenderPipeline)
 local interactionPipeline = require(game.ServerStorage.Server.services.combatService.pipelines.InteractionPipeline._InteractionPipeline)
+local uiStatePipeline = require(game.ServerStorage.Server.services.combatService.pipelines.UIStatePipeline._UIStatePipeline)
 local endpoints = require(game.ServerStorage.Server.services.combatService.API.frontEnd.Remotes)
 
 function service.beginCombat(playerId : number, opponentId : number, snapshotNumber : number, attackerData)
@@ -65,12 +66,17 @@ rs.Heartbeat:Connect(function(dt)
 
 		local renderEvents = renderPipeline.renderEvents(queue:getAllRuntimeEvents(), currentTime, v["IdentityBC"]["attackerPlayerId"])
 		local interactionEvents = interactionPipeline.updatePlayerState(queue:getAllRuntimeEvents(), currentTime)
+		local uiStateEvents = uiStatePipeline.process(v, queue:getAllRuntimeEvents(), currentTime)
 		
 		for _, currentEvent in pairs(renderEvents) do
 			table.insert(events, currentEvent)
 		end
 
 		for _, currentEvent in pairs(interactionEvents) do
+			table.insert(events, currentEvent)
+		end
+
+		for _, currentEvent in pairs(uiStateEvents) do
 			table.insert(events, currentEvent)
 		end
 
