@@ -2,6 +2,7 @@ local module = {}
 
 local applies = {
 	require(script.Parent.systems.UnitLifecycleClientSystem._UnitLifecycleClientSystem),
+	require(script.Parent.systems.DamageIndicatorSystem._DamageIndicatorSystem),
 }
 
 function module.execute(event)

@@ -82,8 +82,19 @@ export type damageApplied = {
 	time : number,
 	eventType : "DamageApplied",
 	data : {
-		amount : number,
-		target : string
+		unitId : string,
+		damage : number,
+		sourceUnitId : string
+	}
+}
+
+-- evento interno do frontend, derivado de DamageApplied pelo Damage Indicator System
+export type damageIndicatorCreated = {
+	time : number,
+	eventType : "DamageIndicatorCreated",
+	data : {
+		unitId : string,
+		amount : number
 	}
 }
 

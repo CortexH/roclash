@@ -31,9 +31,7 @@ function module.processEvent(event)
 
 	for _, newEvent in createdEvents do
 
-		module.enqueueEvent({
-			event = newEvent
-		})
+		module.enqueueEvent(newEvent)
 
 	end
 end

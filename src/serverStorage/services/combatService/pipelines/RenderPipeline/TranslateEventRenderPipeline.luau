@@ -67,8 +67,18 @@ function translateAttackImpactEvent()
 	
 end
 
-function translateDamageAppliedEvent()
-	
+function translateDamageAppliedEvent(event : eventType.damageAppliedEvent, currentTime)
+	local renderEvent : renderEventType.damageApplied = {
+		eventType = "DamageApplied",
+		time = event.time,
+		data = {
+			unitId = event.data.targetId,
+			damage = event.data.damage,
+			sourceUnitId = event.data.sourceId
+		}
+	}
+
+	return renderEvent
 end
 
 function translateUnitPlacementCommandResponse(event : commandResponseType.unitPlacementCommandResponse, currentTime)
