@@ -25,7 +25,6 @@ function module.handle(event : intentTypes.AttackIntent, context)
     end
 
     local targetView = viewPort.getUnitBattleView(unitId, targetId, context)
-    print("Target View for targetId:", targetId, "is", targetView)
     if not targetView or not targetView.isAlive then
         return { eventService.createAttackIntentFailed(unitId, targetId, "TARGET_DEAD", "SYSTEM", nil) }
     end

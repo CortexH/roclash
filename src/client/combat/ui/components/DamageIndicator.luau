@@ -6,10 +6,14 @@ module.__index = module
 -- Recebe os dados necessários e cuida somente da representação.
 
 local RISE_HEIGHT = 2
+local HORIZONTAL_SPREAD = 1
 local TEXT_COLOR = Color3.fromRGB(255, 80, 80)
 
 function module.new(amount : number)
 	local self = setmetatable({}, module)
+
+	-- Offset horizontal aleatório para que indicadores simultâneos não saiam do mesmo ponto.
+	self.horizontalOffset = (math.random() * 2 - 1) * HORIZONTAL_SPREAD
 
 	local billboard = Instance.new("BillboardGui")
 	billboard.Name = "damageIndicator"
@@ -40,7 +44,7 @@ end
 -- t: progresso de 0 a 1 derivado de currentTime.
 function module:update(t : number)
 	local rise = t * RISE_HEIGHT
-	self.billboard.StudsOffset = Vector3.new(0, rise, 0)
+	self.billboard.StudsOffset = Vector3.new(self.horizontalOffset, rise, 0)
 	self.label.TextTransparency = t
 	self.label.TextStrokeTransparency = t
 end

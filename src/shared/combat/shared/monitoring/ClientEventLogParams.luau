@@ -1,5 +1,5 @@
 return {
-    eventConsumedLog = false,
+    eventConsumedLog = true,
     eventEnqueuedLog = false,
     eventFailLog = true
 }

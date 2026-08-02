@@ -69,7 +69,7 @@ function module.eventConsumed(event)
 end
 
 function log(item : logType)
-	print("EVENT " .. item.logType .. " - type: " .. item.data.eventType .. " - DATA ::", item)
+	print("[CLIENT] EVENT " .. item.logType .. " - type: " .. item.data.eventType .. " - DATA ::", item)
 end
 
 return module

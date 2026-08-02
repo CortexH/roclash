@@ -90,7 +90,7 @@ function verifyEventType(eventType)
 end
 
 function log(item : logType)
-	print("EVENT " .. item.logType .. " - type: " .. item.data.eventType .. " - DATA ::", item)
+	print("[SERVER] EVENT " .. item.logType .. " - type: " .. item.data.eventType .. " - DATA ::", item)
 end
 
 return module

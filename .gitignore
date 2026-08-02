@@ -10,3 +10,8 @@ sourcemap.json
 # Ferramentas e documentação local
 
 /projeto - contexto/
+/graphify-out/cache
+/graphify-out/graphify.log
+/graphify-out/*.html
+/graphify-out/*.json
+/graphify-out/*.json.sig
