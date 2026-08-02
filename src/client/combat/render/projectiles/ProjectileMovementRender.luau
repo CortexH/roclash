@@ -4,7 +4,7 @@ local rs = game:GetService("RunService")
 
 local lifecycleRender = require(script.Parent.ProjectileLifecycleRender)
 
-local viewRegistry = require(script.Parent.Parent.Parent.state.ProjectileViewRegistry)
+local viewRegistry = require(script.Parent.Parent.Parent.state.registry.ProjectileViewRegistry)
 local gameState = require(script.Parent.Parent.Parent.state.GameState)
 
 rs.Heartbeat:Connect(function()

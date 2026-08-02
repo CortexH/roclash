@@ -9,7 +9,7 @@ local gameConsts = require(script.Parent.Parent.consts.GameConsts)
 local mapConsts = require(script.Parent.Parent.consts.MapConsts)
 
 local interactionState = require(script.Parent.Parent.state.InteractionState)
-local storedUnitsState = require(script.Parent.Parent.state.StoredUnitsCache)
+local storedUnitsState = require(script.Parent.Parent.state.cache.StoredUnitsCache)
 local mapUtils = require(game.ReplicatedStorage.Shared.combat.shared.utils.PlayerMapUtils)
 
 local eventsAPI = require(script.Parent.Parent.network.CommandSender)

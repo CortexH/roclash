@@ -3,9 +3,9 @@ local module = {}
 local root = script.Parent.Parent.Parent.Parent.Parent.Parent
 local clientEvents = require(game.ReplicatedStorage.Shared.combat.shared.eventTypes.FrontEventTypes)
 
-local viewRegistry = require(root.state.UnitViewRegistry)
-local stateCache = require(root.state.UnitStateCache)
-local definition = require(root.state.UnitDefinitionCache)
+local viewRegistry = require(root.state.registry.UnitViewRegistry)
+local stateCache = require(root.state.cache.UnitStateCache)
+local definition = require(root.state.cache.UnitDefinitionCache)
 
 local mapUtils = require(game.ReplicatedStorage.Shared.combat.shared.utils.PlayerMapUtils)
 local mapConsts = require(root.consts.MapConsts)

@@ -5,7 +5,7 @@ local lp = game:GetService("Players").LocalPlayer
 local states = script.Parent.Parent.Parent.Parent.Parent.Parent.state
 local cmdResponseTypes = require(game.ReplicatedStorage.Shared.combat.shared.eventTypes.CommandResponseTypes)
 
-local storedUnitState = require(states.StoredUnitsCache)
+local storedUnitState = require(states.cache.StoredUnitsCache)
 
 function module.apply(event : cmdResponseTypes.unitPlacementCommandResponse)
 	

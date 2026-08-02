@@ -4,7 +4,7 @@ module.__index = module
 
 local unitView = require(game.ReplicatedStorage.Shared.combat.shared.dataTypes.UnitView)
 
-local viewRegistry = require(script.Parent.Parent.state.UnitViewRegistry)
+local viewRegistry = require(script.Parent.Parent.state.registry.UnitViewRegistry)
 local mouse = game.Players.LocalPlayer:GetMouse()
 local RunService = game:GetService("RunService")
 

@@ -1,6 +1,6 @@
 local module = {}
 
-local viewRegistry = require(script.Parent.Parent.Parent.state.ProjectileViewRegistry)
+local viewRegistry = require(script.Parent.Parent.Parent.state.registry.ProjectileViewRegistry)
 
 function module.spawn(projectileId)
 	local view = viewRegistry.get(projectileId)

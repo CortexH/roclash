@@ -5,7 +5,8 @@ local applies = {
 	require(script.Parent.appliers.UnitCmdResponsesApplier._UnitCmdResponsesApplier),
 	require(script.Parent.appliers.UnitMovementClientApplier._UnitMovementClientApplier),
 	require(script.Parent.appliers.UnitCombatClientApplier._UnitCombatClientApplier),
-	require(script.Parent.appliers.DamageIndicatorApplier._DamageIndicatorApplier)
+	require(script.Parent.appliers.DamageIndicatorApplier._DamageIndicatorApplier),
+	require(script.Parent.appliers.UnitRemovedApplier._UnitRemovedApplier)
 }
 
 function module.execute(event)

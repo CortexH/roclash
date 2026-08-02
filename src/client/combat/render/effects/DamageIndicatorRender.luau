@@ -2,8 +2,8 @@ local module = {}
 
 local rs = game:GetService("RunService")
 
-local damageIndicatorRegistry = require(script.Parent.Parent.Parent.state.DamageIndicatorRegistry)
-local unitViewRegistry = require(script.Parent.Parent.Parent.state.UnitViewRegistry)
+local damageIndicatorRegistry = require(script.Parent.Parent.Parent.state.registry.DamageIndicatorRegistry)
+local unitViewRegistry = require(script.Parent.Parent.Parent.state.registry.UnitViewRegistry)
 local gameState = require(script.Parent.Parent.Parent.state.GameState)
 
 local damageIndicator = require(script.Parent.Parent.Parent.ui.components.DamageIndicator)

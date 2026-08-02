@@ -1,6 +1,6 @@
 local module = {}
 
-local factory = require(script.Parent.Parent.factory.UnitViewFactory)
+local factory = require(script.Parent.Parent.Parent.factory.UnitViewFactory)
 local unitView = require(game.ReplicatedStorage.Shared.combat.shared.dataTypes.UnitView)
 
 module.registry = {}

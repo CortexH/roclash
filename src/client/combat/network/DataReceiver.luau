@@ -7,11 +7,11 @@ local loadDataContract = require(game.ReplicatedStorage.Shared.combat.shared.API
 
 local mapConsts = require(script.Parent.Parent.consts.MapConsts)
 
-local definitionCache = require(script.Parent.Parent.state.UnitDefinitionCache)
-local stateCache = require(script.Parent.Parent.state.UnitStateCache)
-local unitViewRegistry = require(script.Parent.Parent.state.UnitViewRegistry)
-local inGameUnitsCache = require(script.Parent.Parent.state.InGameUnitsCache)
-local storedUnitsCache = require(script.Parent.Parent.state.StoredUnitsCache)
+local definitionCache = require(script.Parent.Parent.state.cache.UnitDefinitionCache)
+local stateCache = require(script.Parent.Parent.state.cache.UnitStateCache)
+local unitViewRegistry = require(script.Parent.Parent.state.registry.UnitViewRegistry)
+local inGameUnitsCache = require(script.Parent.Parent.state.cache.InGameUnitsCache)
+local storedUnitsCache = require(script.Parent.Parent.state.cache.StoredUnitsCache)
 
 local structureRender = require(script.Parent.Parent.render.unit.UnitLifecycleRender)
 

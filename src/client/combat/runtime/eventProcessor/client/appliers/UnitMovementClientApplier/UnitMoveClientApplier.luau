@@ -7,7 +7,7 @@ local shared = game.ReplicatedStorage.Shared.combat.shared
 local clientEvents = require(shared.eventTypes.FrontEventTypes)
 local movementEntity = require(shared.entity.UnitClientMovement)
 
-local unitViews = require(states.UnitViewRegistry)
+local unitViews = require(states.registry.UnitViewRegistry)
 local mapUtils = require(root.utils.MapUtils)
 
 

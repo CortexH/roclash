@@ -3,8 +3,8 @@ local module = {}
 local states = script.Parent.Parent.Parent.Parent.Parent.Parent.state
 local clientEvents = require(game.ReplicatedStorage.Shared.combat.shared.eventTypes.FrontEventTypes)
 
-local viewRegistry = require(states.ProjectileViewRegistry)
-local unitViewRegistry = require(states.UnitViewRegistry)
+local viewRegistry = require(states.registry.ProjectileViewRegistry)
+local unitViewRegistry = require(states.registry.UnitViewRegistry)
 
 local projectileMovement = require(game.ReplicatedStorage.Shared.combat.shared.entity.UnitClientProjectileMovement)
 

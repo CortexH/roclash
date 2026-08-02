@@ -88,16 +88,6 @@ export type damageApplied = {
 	}
 }
 
--- evento interno do frontend, derivado de DamageApplied pelo Damage Indicator System
-export type damageIndicatorCreated = {
-	time : number,
-	eventType : "DamageIndicatorCreated",
-	data : {
-		unitId : string,
-		amount : number
-	}
-}
-
 -- VFX
 
 export type impactVFX = {

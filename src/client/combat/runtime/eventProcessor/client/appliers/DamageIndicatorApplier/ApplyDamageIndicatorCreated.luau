@@ -1,15 +1,15 @@
 local module = {}
 
-local clientEvents = require(game.ReplicatedStorage.Shared.combat.shared.eventTypes.FrontEventTypes)
+local combatClientEvents = require(script.Parent.Parent.Parent.Parent.Parent.Parent.events.combat.CombatClientEvents)
 
-local damageIndicatorRegistry = require(script.Parent.Parent.Parent.Parent.Parent.Parent.state.DamageIndicatorRegistry)
-local unitViewRegistry = require(script.Parent.Parent.Parent.Parent.Parent.Parent.state.UnitViewRegistry)
+local damageIndicatorRegistry = require(script.Parent.Parent.Parent.Parent.Parent.Parent.state.registry.DamageIndicatorRegistry)
+local unitViewRegistry = require(script.Parent.Parent.Parent.Parent.Parent.Parent.state.registry.UnitViewRegistry)
 
 local damageIndicatorRender = require(script.Parent.Parent.Parent.Parent.Parent.Parent.render.effects.DamageIndicatorRender)
 
 -- Aplica o evento interno no runtime: resolve a unit através de UnitBattleView
 -- (UnitViewRegistry) e registra o estado necessário para a renderização.
-function module.apply(event : clientEvents.damageIndicatorCreated)
+function module.apply(event : combatClientEvents.damageIndicatorCreated)
 	local unitView = unitViewRegistry.get(event.data.unitId)
 	if not unitView then return end
 

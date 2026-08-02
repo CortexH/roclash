@@ -4,7 +4,7 @@ local eventTypes = require(game.ReplicatedStorage.Shared.combat.shared.eventType
 local root = script.Parent.Parent.Parent.Parent.Parent.Parent
 
 local cardController = require(root.ui.controllers.battleHudSubControllers.CardController)
-local unitViewRegistry = require(root.state.UnitViewRegistry)
+local unitViewRegistry = require(root.state.registry.UnitViewRegistry)
 
 function module.apply(event: eventTypes.UnitSelectQuerySuccessResponse)
     local unitView = unitViewRegistry.get(event.data.unitId)

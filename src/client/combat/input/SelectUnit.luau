@@ -3,7 +3,7 @@ local module = {}
 local pl = game:GetService("Players").LocalPlayer
 local interactionState = require(script.Parent.Parent.state.InteractionState)
 
-local viewRegistry = require(script.Parent.Parent.state.UnitViewRegistry)
+local viewRegistry = require(script.Parent.Parent.state.registry.UnitViewRegistry)
 
 local conns = {}
 

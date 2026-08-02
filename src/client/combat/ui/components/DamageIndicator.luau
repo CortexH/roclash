@@ -12,7 +12,7 @@ function module.new(amount : number)
 	local self = setmetatable({}, module)
 
 	local billboard = Instance.new("BillboardGui")
-	billboard.Name = "DamageIndicator"
+	billboard.Name = "damageIndicator"
 	billboard.Size = UDim2.fromOffset(100, 40)
 	billboard.AlwaysOnTop = true
 	billboard.MaxDistance = 200

@@ -2,7 +2,7 @@ local module = {}
 
 local rs = game:GetService("RunService")
 
-local unitViewsRegistry = require(script.Parent.Parent.Parent.state.UnitViewRegistry)
+local unitViewsRegistry = require(script.Parent.Parent.Parent.state.registry.UnitViewRegistry)
 local gameState = require(script.Parent.Parent.Parent.state.GameState)
 
 rs.Heartbeat:Connect(function()
