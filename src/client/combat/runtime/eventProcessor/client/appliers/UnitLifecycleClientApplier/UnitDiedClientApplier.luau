@@ -8,6 +8,7 @@ local stateCache = require(states.UnitStateCache)
 local definition = require(states.UnitDefinitionCache)
 
 local render = require(script.Parent.Parent.Parent.Parent.Parent.Parent.render.unit.UnitLifecycleRender)
+local deadUnitRender = require(script.Parent.Parent.Parent.Parent.Parent.Parent.render.unit.DeadUnitRender)
 
 function module.apply(event : clientEvents.unitDied)
 	local state = stateCache.get(event.data.unitId)
@@ -17,7 +18,7 @@ function module.apply(event : clientEvents.unitDied)
 	state.maxHealth = 0
 	state.owner = nil
 		
-	render.despawn(event.data.unitId)
+	render.kill(event.data.unitId)
 	
 end
 

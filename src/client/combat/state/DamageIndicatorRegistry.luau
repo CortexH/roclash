@@ -39,4 +39,16 @@ function module.get(id : string) : damageIndicator?
 	return module.registry[id]
 end
 
+-- Remove todos os indicadores de uma unit (ex: quando a unit é removida do mundo).
+function module.removeByUnit(unitId : string)
+	for id, indicator in pairs(module.registry) do
+		if indicator.unitId == unitId then
+			if indicator.component then
+				indicator.component:destroy()
+			end
+			module.registry[id] = nil
+		end
+	end
+end
+
 return module

@@ -11,4 +11,8 @@ function module.get(unitId) : unitDefinitionType.unitDefinition
 	return module.data[unitId]
 end
 
+function module.unregister(unitId)
+	module.data[unitId] = nil
+end
+
 return module

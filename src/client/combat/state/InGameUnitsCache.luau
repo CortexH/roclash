@@ -6,6 +6,13 @@ function module.register(unitId)
 	table.insert(module.data, unitId)
 end
 
+function module.remove(unitId)
+	local index = table.find(module.data, unitId)
+	if index then
+		table.remove(module.data, index)
+	end
+end
+
 function module.getAll()
 	return table.clone(module.data)
 end
