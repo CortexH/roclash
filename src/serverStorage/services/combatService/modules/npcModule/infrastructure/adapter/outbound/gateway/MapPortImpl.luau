@@ -37,13 +37,31 @@ port.getNearestPossibleCell = function(npcUnitId, targetUnitId, context)
 
 	local bestCell = nil
 	local bestDistance = math.huge
+	local fallbackCell = nil
+	local fallbackDistance = math.huge
 	
 	for _, cell in ipairs(adjacents) do
 		if mapAPI.isCellWalkable(cell, context) and not mapAPI.isCellReserved(cell, context) then
 			local distance = math.sqrt(
-				(cell.x - npcCell.x)^2 + 
+				(cell.x - npcCell.x)^2 +
 					(cell.y - npcCell.y)^2
 			)
+
+			-- Fallback: melhor célula walkable, mesmo que tenha parede entre ela
+			-- e o alvo. Usado quando o alvo está cercado por paredes, para a unit
+			-- ainda conseguir se mover até lá e resolver o blocker.
+			if distance < fallbackDistance then
+				fallbackDistance = distance
+				fallbackCell = cell
+			end
+
+			-- Descarta células onde existe uma Wall (diferente do próprio alvo)
+			-- entre a célula e o alvo. Isso garante que a unit se mova até uma
+			-- posição de onde consiga atacar o alvo diretamente, sem precisar
+			-- atacar um blocker. A parede que é o próprio alvo não é descartada.
+			local hasWall, wallId = port.hasWallToward(cell, targetCell, context)
+			if hasWall and wallId ~= targetUnitId then continue end
+
 			if distance < bestDistance then
 				bestDistance = distance
 				bestCell = cell
@@ -51,7 +69,7 @@ port.getNearestPossibleCell = function(npcUnitId, targetUnitId, context)
 		end
 	end
 
-	return bestCell
+	return bestCell or fallbackCell
 end
 
 port.isCellWalkable = function(cell, context)
