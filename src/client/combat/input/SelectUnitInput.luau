@@ -75,6 +75,7 @@ function module.selectUnit(unitId : string)
     eventsAPI.sendCommand({
         type = "SELECT_UNIT",
         target = "UNIT",
+        signature = "UNIT_CARD",
         unitId = unitId
     })
 end

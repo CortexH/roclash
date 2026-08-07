@@ -11,6 +11,7 @@ commands.sendUnitSelectQueryRequest = function(player: Players, request : comman
             eventType = "UnitSelectQuery",
             type = "QUERY",
             delay = 0,
+            signature = request.signature,
             requesterId = tostring(player.UserId),
             data = {
                 unitId = request.unitId

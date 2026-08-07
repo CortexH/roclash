@@ -15,6 +15,7 @@ export type spawnUnitCommand = {
 export type unitSelectCommand = {
 	type : "SELECT_UNIT",
 	target : "UNIT",
+	signature : string,
 	unitId : string
 }
 

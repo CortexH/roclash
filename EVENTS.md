@@ -299,6 +299,8 @@ Listagem de todos os eventos do sistema, organizados por módulo/categoria, com 
 |--------|-----------|------|
 | `UnitSelectQuery` | query de seleção de uma unit | `UnitSelectQuerySuccess` / `UnitSelectQueryFailure` |
 
+> **Semântica das Queries:** o `eventType` identifica a operação solicitada. O campo `signature` identifica o consumidor/contexto que fez a requisição (ex: `"UNIT_CARD"`), é enviado pelo frontend e ecoado pelo servidor na resposta, permitindo que múltiplos listeners da mesma operação se diferenciem sem criar eventos por consumidor. O `requesterId` identifica o responsável pela requisição (obtido do `player.UserId` no servidor).
+
 ## 3.3 Intents (npcModule valida, exceto SpawnIntent no entityModule)
 
 | Intent | O que faz | Validado por | IntentResponse |
@@ -372,6 +374,8 @@ Listagem de todos os eventos do sistema, organizados por módulo/categoria, com 
 |--------|-----------|
 | `UnitSelectQuerySuccessResponse` | resposta de sucesso da query de seleção |
 | `UnitSelectQueryFailureResponse` | resposta de falha da query de seleção |
+
+> A resposta ecoa a `signature` do consumidor que originou a Query, permitindo que múltiplos listeners da mesma operação se diferenciem. Cada listener possui uma `signature` fixa e ignora respostas cuja `signature` não seja a sua.
 
 ## 3.9 UI State (servidor → cliente)
 

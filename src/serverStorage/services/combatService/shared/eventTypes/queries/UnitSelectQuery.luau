@@ -4,6 +4,7 @@ export type UnitSelectQuery = {
     eventType: "UnitSelectQuery",
     type: "QUERY",
     delay: number,
+    signature: string,
     requesterId: string,
     data: {
         unitId: string
@@ -14,6 +15,7 @@ export type UnitSelectQuerySuccess = {
     eventType: "UnitSelectQuerySuccess",
     type: "QUERY",
     delay: number,
+    signature: string,
     requesterId: string,
     data: {
         unitId: string,
@@ -47,6 +49,7 @@ export type UnitSelectQueryFailure = {
     eventType: "UnitSelectQueryFailure",
     type: "QUERY",
     delay: number,
+    signature: string,
     requesterId: string,
     data: {
         unitId: string,

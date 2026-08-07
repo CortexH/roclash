@@ -3,6 +3,8 @@ local module = {}
 export type UnitSelectQuerySuccessResponse = {
     eventType: "UnitSelectQuerySuccessResponse",
     delay: number,
+    signature: string,
+    requesterId: string,
     data: {
         unitId: string,
         unitName: string,
@@ -34,6 +36,8 @@ export type UnitSelectQuerySuccessResponse = {
 export type UnitSelectQueryFailureResponse = {
     eventType: "UnitSelectQueryFailureResponse",
     delay: number,
+    signature: string,
+    requesterId: string,
     data: {
         unitId: string,
         reason : {

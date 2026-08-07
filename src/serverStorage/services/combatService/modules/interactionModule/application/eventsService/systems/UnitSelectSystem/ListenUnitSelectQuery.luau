@@ -20,6 +20,7 @@ function generateFail(event : query.UnitSelectQuery, reason : string)
         eventType = "UnitSelectQueryFailure",
         type = "QUERY",
         delay = 0,
+        signature = event.signature,
         requesterId = event.requesterId,
         data = {
             unitId = event.data.unitId,
@@ -64,6 +65,7 @@ function generateSuccess(event : query.UnitSelectQuery, unit : unitEntity.unitEn
         eventType = "UnitSelectQuerySuccess",
         type = "QUERY",
         delay = 0,
+        signature = event.signature,
         requesterId = event.requesterId,
         data = {
             unitId = event.data.unitId,

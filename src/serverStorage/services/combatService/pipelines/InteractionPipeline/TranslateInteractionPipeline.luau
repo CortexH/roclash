@@ -7,6 +7,8 @@ function translateSelectQuery(event, currentTime)
     local translatedEvent = {
         eventType = "UnitSelectQuerySuccessResponse",
         delay = event.delay,
+        signature = event.signature,
+        requesterId = event.requesterId,
         data = {
             unitId = event.data.unitId,
             unitName = event.data.unitName,
