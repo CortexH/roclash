@@ -15,7 +15,7 @@ local mapPort = require(domain.ports.MapPort)
 -- No futuro, este Handler será responsável por:
 --   - verificar se o NPC realmente chegou próximo do aggro;
 --   - caso tenha chegado, emitir AggroReachedEvent;
---   - caso ainda não tenha chegado, emitir um novo MovementIntent para continuar a movimentação.
+--   - caso ainda não tenha chegado, emitir um novo MoveIntent para continuar a movimentação.
 -- Nesta primeira implementação, mantém o comportamento atual de verificação de range.
 function module.handle(event : combatEventTypes.verifyAggroReachedEvent, context)
 	if event.isValid == false then return {} end
@@ -26,6 +26,12 @@ function module.handle(event : combatEventTypes.verifyAggroReachedEvent, context
 
 	local brain = brainPort.getNpcBrain(event.data.unitId, context)
 	if not brain then return {} end
+
+	-- Movimento manual do jogador terminou: limpa o flag e retoma a busca de aggro.
+	if brain:isManualMoving() then
+		brain:setManualMoving(false)
+		return { eventService.createUnitAggroSearchEvent(0, event.data.unitId) }
+	end
 
 	local aggroId = brain:getAggro():getCurrentAggro()
 	if not aggroId then return {} end
@@ -43,7 +49,7 @@ function module.handle(event : combatEventTypes.verifyAggroReachedEvent, context
 
 	if not aggroView.inRange then return {} end
 
-	-- TODO: implementar a lógica completa de verificação (emitir novo MovementIntent caso não tenha chegado).
+	-- TODO: implementar a lógica completa de verificação (emitir novo MoveIntent caso não tenha chegado).
 	return { eventService.targetAcquired(
 		0,
 		event.data.unitId,

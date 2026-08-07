@@ -9,7 +9,7 @@ export type AggroPolicyType = "COMMAND" | "AUTO"
 
 export type AggroIntent = {
 	["delay"] : number,
-	["eventType"] : "UnitAggroIntentEvent",
+	["eventType"] : "AggroIntent",
 	["type"] : "EVENT",
 	["data"] : {
 		["source"] : string,

@@ -5,6 +5,7 @@ module.__index = module
 local unitView = require(game.ReplicatedStorage.Shared.combat.shared.dataTypes.UnitView)
 
 local viewRegistry = require(script.Parent.Parent.state.registry.UnitViewRegistry)
+local mapUtils = require(script.Parent.Parent.utils.MapUtils)
 local mouse = game.Players.LocalPlayer:GetMouse()
 local RunService = game:GetService("RunService")
 
@@ -17,9 +18,9 @@ export type pointData = {
     onClick : (unitView.unitView, string) -> ()
 }
 export type lambdaConfigs = {
-    onClick : (unitView.unitView, string) -> (),
-    onHoverStart : (unitView.unitView, string) -> (),
-    onHoverEnd : (unitView.unitView, string) -> (),
+    onClick : ((unitView.unitView, string) -> ()) | (({x:number, y:number}) -> ()),
+    onHoverStart : ((unitView.unitView, string) -> ()) | (() -> ()),
+    onHoverEnd : ((unitView.unitView, string) -> ()) | (() -> ()),
 }
 
 function module.new(mode : pointModes, configs : lambdaConfigs, interactionId : string)
@@ -36,12 +37,21 @@ function module.new(mode : pointModes, configs : lambdaConfigs, interactionId : 
         onHoverEnd = configs.onHoverEnd
     }
 
+    self.cellData = {
+        hoveringCell = nil,
+        onClick = configs.onClick,
+        onHoverStart = configs.onHoverStart,
+        onHoverEnd = configs.onHoverEnd
+    }
+
     return self
 end
 
 function module:start(configs : lambdaConfigs)
     if self.currentMode == "UNIT" then
         self:_startUnitMode()
+    elseif self.currentMode == "CELL" then
+        self:_startCellMode()
     end
 end
 
@@ -99,6 +109,37 @@ function module:_startUnitMode()
     end)
 end
 
+function module:_startCellMode()
+    self:_stopConnections()
+
+    self._moveConnection = mouse.Move:Connect(function()
+        local x, y = mouse.Hit.X, mouse.Hit.Z
+        local cell = mapUtils.getCellByPosition({x = x, y = y})
+
+        if cell == self.cellData.hoveringCell then
+            return
+        end
+
+        if self.cellData.hoveringCell then
+            self.cellData.onHoverEnd(self.cellData.hoveringCell)
+        end
+
+        self.cellData.hoveringCell = cell
+
+        if cell then
+            self.cellData.onHoverStart(cell)
+        end
+    end)
+
+    self._clickConnection = mouse.Button1Down:Connect(function()
+        if not self.cellData.hoveringCell then
+            return
+        end
+
+        self.cellData.onClick(self.cellData.hoveringCell)
+    end)
+end
+
 function module:_stopConnections()
     if self._moveConnection then
         self._moveConnection:Disconnect()
@@ -114,15 +155,23 @@ end
 function module:stop()
     self:_stopConnections()
 
-    if self.unitData.hoveringUnitView then
-        self.unitData.onHoverEnd(
-            self.unitData.hoveringUnitView,
-            self.unitData.hoveringUnitId
-        )
-    end
+    if self.currentMode == "UNIT" then
+        if self.unitData.hoveringUnitView then
+            self.unitData.onHoverEnd(
+                self.unitData.hoveringUnitView,
+                self.unitData.hoveringUnitId
+            )
+        end
 
-    self.unitData.hoveringUnitId = nil
-    self.unitData.hoveringUnitView = nil
+        self.unitData.hoveringUnitId = nil
+        self.unitData.hoveringUnitView = nil
+    elseif self.currentMode == "CELL" then
+        if self.cellData.hoveringCell then
+            self.cellData.onHoverEnd(self.cellData.hoveringCell)
+        end
+
+        self.cellData.hoveringCell = nil
+    end
 end
 
 return module

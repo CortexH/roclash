@@ -7,7 +7,7 @@ local applies = {
 	require(script.Parent.systems.combatSystem._CombatSystem),
 	require(script.Parent.systems.DamageResolutionSystem._DamageResolutionSystem),
 	require(script.Parent.systems.UnitIntentSystem._UnitIntentSystem),
-
+	require(script.Parent.systems.SpawnIntentSystem._SpawnIntentSystem),
 }
 
 function module.execute(event, context)

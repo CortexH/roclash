@@ -4,7 +4,7 @@ export type unitPlacementCommandResponse = {
 	["eventType"] : "UnitPlacementCommandResponse",
 	["delay"] : number,
 	["data"] : {
-		["commandResponseType"] : "FAIL" | "SUCCESS",
+		["commandResponseType"] : "REJECT" | "SUCCESS",
 		["fault"] : string,
 		["FAULT"] : {
 			["entityId"] : string,
@@ -25,7 +25,7 @@ export type unitAggroCommandResponse = {
 	["eventType"] : "UnitAggroCommandResponse",
 	["delay"] : number,
 	["data"] : {
-		["commandResponseType"] : "FAIL" | "SUCCESS",
+		["commandResponseType"] : "REJECT" | "SUCCESS",
 		["success"] : {
 			["entityId"] : string,
 			["position"] : {x : number, y : number},

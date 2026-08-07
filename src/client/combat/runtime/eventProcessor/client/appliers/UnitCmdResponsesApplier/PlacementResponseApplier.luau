@@ -10,7 +10,7 @@ local storedUnitState = require(states.cache.StoredUnitsCache)
 function module.apply(event : cmdResponseTypes.unitPlacementCommandResponse)
 	
 	if event.data.commandResponseType == "SUCCESS" then success(event) end
-	if event.data.commandResponseType == "FAIL" then fail(event) end
+	if event.data.commandResponseType == "REJECT" then fail(event) end
 end
 
 function fail(event : cmdResponseTypes.unitPlacementCommandResponse)

@@ -37,38 +37,4 @@ export type unitAggroStoppedEvent = {
 	["isValid"] : boolean
 }
 
-export type unitAggroIntentEvent = {
-	["delay"] : number,
-	["eventType"] : "UnitAggroIntentEvent",
-	["type"] : "EVENT",
-	["data"] : {
-		["unitId"] : string,
-		["targetId"] : string
-	},
-	["isValid"] : boolean
-}
-
-export type unitAggroIntentAccepted = {
-	["delay"] : number,
-	["eventType"] : "UnitAggroIntentAccepted",
-	["type"] : "EVENT",
-	["data"] : {
-		["unitId"] : string,
-		["targetId"] : string
-	},
-	["isValid"] : boolean
-}
-
-export type unitAggroIntentRejected = {
-	["delay"] : number,
-	["eventType"] : "UnitAggroIntentRejected",
-	["type"] : "EVENT",
-	["data"] : {
-		["unitId"] : string,
-		["targetId"] : string,
-		["reason"] : string
-	},
-	["isValid"] : boolean
-}
-
 return module

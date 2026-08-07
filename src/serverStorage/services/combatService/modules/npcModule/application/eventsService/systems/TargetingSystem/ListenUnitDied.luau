@@ -49,7 +49,7 @@ function module.handle(event : combatEventTypes.unitDiedEvent, context)
 								-- já está em range e sem bloqueio: ataca o objetivo original
 								table.insert(events, eventService.targetAcquired(0, npcId, currentAggro))
 							else
-								table.insert(events, eventService.createMovementIntent(
+								table.insert(events, eventService.createMoveIntent(
 									0, npcId, nil, currentAggro, "PATH_BLOCKED"
 								))
 							end

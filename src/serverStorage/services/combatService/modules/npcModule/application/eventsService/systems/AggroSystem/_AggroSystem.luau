@@ -6,11 +6,9 @@ module.applies = {
 	["UnitDiedEvent"] = require(script.Parent.ListenUnitDiedEvent).handle,
 	["UnitSpawnedEvent"] = require(script.Parent.ListenUnitSpawnEvent).handle,
 	["UnitAggroSearchEvent"] = require(script.Parent.ListenAggroSearch).handle,
-	["MovementIntentRejected"] = require(script.Parent.ListenMovementIntentRejected).handle,
+	["MoveIntentRejected"] = require(script.Parent.ListenMovementIntentRejected).handle,
 
-	["UnitAggroCommand"] = require(script.Parent.ListenAggroCommand).handleEvent,
-
-	["UnitAggroIntentEvent"] = require(script.Parent.AggroIntentSystem).handle
+	["AggroIntent"] = require(script.Parent.AggroIntentSystem).handle
 }
 
 module.generates = {

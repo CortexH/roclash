@@ -28,12 +28,12 @@ function module.handle(event : combatEventTypes.unitLeftTowerRangeEvent, context
 
 	for _, id in delta.added do
 		table.insert(events, eventService.targetAcquired(
-			tower.id, id, 0))
+			0, tower.id, id))
 	end
 
 	for _, id in delta.removed do
 		table.insert(events, eventService.targetLost(
-			tower.id, id, 0))
+			0, tower.id, id))
 	end
 
 	return events

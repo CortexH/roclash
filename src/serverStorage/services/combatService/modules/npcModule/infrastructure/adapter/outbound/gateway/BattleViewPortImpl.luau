@@ -15,6 +15,7 @@ local unitEntity = require(game.ServerStorage.Server.services.combatService.modu
 port.getSelfBattleView = function(selfId, context)
 	local ct = context["TimeBC"].currentTime
 	local unit : unitEntity.unitEntity = context["UnitsBC"]:getUnit(selfId)
+	if not unit then return nil end
 
 	local view : selfView.SelfBattleView = {
 		id = selfId,
@@ -28,6 +29,9 @@ port.getSelfBattleView = function(selfId, context)
 		isPlaced = unit:isPlaced(),
 		
 		party = unit:getParty(),
+		
+		owner = unit.owner,
+		canMove = unit:isAttacker(),
 		
 		isLowHealth = unit:isLowHealth(),
 		dangerLevel = 1

@@ -2,6 +2,8 @@ local module = {}
 
 local applies = {
 	require(script.Parent.systems.UnitSelectSystem._UnitSelectSystem),
+	require(script.Parent.systems.CommandSystem._CommandSystem),
+	require(script.Parent.systems.CommandResponseSystem._CommandResponseSystem),
 }
 
 function module.execute(event, context)

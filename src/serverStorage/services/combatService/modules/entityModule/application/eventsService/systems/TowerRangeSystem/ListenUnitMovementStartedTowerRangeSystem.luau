@@ -61,7 +61,7 @@ function generateEnteredRangeEvent(delay, tower : unitEntity.unitEntity, target 
 		data = {
 			towerUnitId = tower:getId(),
 			targetUnitId = target:getId(),
-			towerUnitVersion = tower:getVersion(),
+			towerUnitVersion = tower:getAttacker():getVersioning():getMovementVersion(),
 			targetUnitVersion = target:getAttacker():getVersioning():getMovementVersion()
 		},
 		isValid = true
@@ -78,8 +78,8 @@ function generateLeftRangeEvent(delay, tower : unitEntity.unitEntity, target : u
 		data = {
 			towerUnitId = tower:getId(),
 			targetUnitId = target:getId(),
-			towerUnitVersion = tower:getVersion(),
-			targetUnitVersion = target:getVersion()
+			towerUnitVersion = tower:getAttacker():getVersioning():getMovementVersion(),
+			targetUnitVersion = target:getAttacker():getVersioning():getMovementVersion()
 		},
 		isValid = true
 	}

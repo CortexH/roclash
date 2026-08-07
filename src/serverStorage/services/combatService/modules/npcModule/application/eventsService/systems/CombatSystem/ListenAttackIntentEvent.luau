@@ -17,22 +17,22 @@ function module.handle(event : intentTypes.AttackIntent, context)
     local selfView = viewPort.getSelfBattleView(unitId, context)
 
     if not selfView then
-        return { eventService.createAttackIntentFailed(unitId, targetId, "INVALID_SELF", "SYSTEM", nil) }
+        return { eventService.createAttackIntentRejected(unitId, targetId, "INVALID_SELF", "SYSTEM", nil) }
     end
 
     if not selfView.canAttack then
-        return { eventService.createAttackIntentFailed(unitId, targetId, "CANNOT_ATTACK", "SYSTEM", nil) }
+        return { eventService.createAttackIntentRejected(unitId, targetId, "CANNOT_ATTACK", "SYSTEM", nil) }
     end
 
     local targetView = viewPort.getUnitBattleView(unitId, targetId, context)
     if not targetView or not targetView.isAlive then
-        return { eventService.createAttackIntentFailed(unitId, targetId, "TARGET_DEAD", "SYSTEM", nil) }
+        return { eventService.createAttackIntentRejected(unitId, targetId, "TARGET_DEAD", "SYSTEM", nil) }
     end
 
     -- 3. Verifica o Range (usando a função isInRange que já temos na UnitEntity)
     if not targetView.inRange then
         return {
-            eventService.createAttackIntentFailed(unitId, targetId, "OUT_OF_RANGE", "SYSTEM", nil)
+            eventService.createAttackIntentRejected(unitId, targetId, "OUT_OF_RANGE", "SYSTEM", nil)
         }
     end
 

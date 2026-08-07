@@ -22,7 +22,7 @@ local function createRejected(source, target, reason, origin)
     }
 end
 
-local function createAccepted(source, target)
+local function createAccepted(source, target, origin)
     return {
         eventType = "AggroIntentAccepted",
         type = "EVENT",
@@ -30,7 +30,8 @@ local function createAccepted(source, target)
         isValid = true,
         data = {
             source = source,
-            target = target
+            target = target,
+            origin = origin
         }
     }
 end
@@ -67,7 +68,7 @@ function module.handle(event: intentTypes.AggroIntent, context: any)
     local success, reason = AggroValidator.validateAggro(unitId, targetId, context, policy, selfView.aggroRange)
 
     if success then
-        return {createAccepted(unitId, targetId)}
+        return {createAccepted(unitId, targetId, origin)}
     else
         return {createRejected(unitId, targetId, reason, origin)}
     end

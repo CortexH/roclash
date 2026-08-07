@@ -10,6 +10,7 @@ function module.new()
 	
 	self.targeting = nil
 	self.aggro = nil
+	self._isManualMoving = false
 	
 	return self
 end
@@ -28,6 +29,14 @@ end
 
 function module:initAggro()
 	self.aggro = aggro.new()
+end
+
+function module:setManualMoving(value : boolean)
+	self._isManualMoving = value
+end
+
+function module:isManualMoving() : boolean
+	return self._isManualMoving
 end
 
 -- serve para apgar toda a memoria do npc quando ele morre.

@@ -21,12 +21,19 @@ function module.handle(event : combatEventTypes.unitAggroSearchEvent, context)
 	if not brain then return {} end
 	if not brain:getAggro() then return {} end
 
+	-- Movimento manual do jogador: a unit não busca novo aggro enquanto estiver
+	-- se movendo por comando. A busca é retomada quando o movimento termina
+	-- (ver ListenVerifyAggroReachedEvent).
+	if brain:isManualMoving() then
+		return {}
+	end
+
 	local bestTarget = aggroService.getBestTarget(event.data.aggroingUnitId, brain, context)
 	
 	if bestTarget then
 		return {{
 			delay = 0,
-			eventType = "UnitAggroIntentEvent",
+			eventType = "AggroIntent",
 			type = "EVENT",
 			data = {
 				source = event.data.aggroingUnitId,

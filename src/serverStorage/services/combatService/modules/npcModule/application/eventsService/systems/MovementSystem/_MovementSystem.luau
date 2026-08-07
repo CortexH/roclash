@@ -3,8 +3,8 @@ local module = {}
 module.applies = {
 	["UnitAggroStartedEvent"] = require(script.Parent.ListenAggroStartedEvent).handle,
 	["UnitStructureBlockingPathEvent"] = require(script.Parent.ListenPathBlockedEvent).handle,
-	["MovementIntent"] = require(script.Parent.ListenMovementIntent).handle,
-	["MovementIntentAccepted"] = require(script.Parent.ListenMovementIntentAccepted).handle
+	["MoveIntent"] = require(script.Parent.ListenMovementIntent).handle,
+	["MoveIntentAccepted"] = require(script.Parent.ListenMovementIntentAccepted).handle
 }
 
 module.generates = {

@@ -19,7 +19,7 @@ function module.handle(event : combatEventTypes.UnitAggroStartedEvent, context)
 	-- TODO: Adicionar validação das versões de movimento (aggroingUnitMovementVersion e aggroedUnitMovementVersion)
 	-- para garantir que o evento não processará versões obsoletas do movimento.
 
-	return {eventService.createMovementIntent(
+	return {eventService.createMoveIntent(
 		0, event.data.aggroingUnitId, nil, event.data.aggroedUnitId, "AGGRO"
 		)}
 end

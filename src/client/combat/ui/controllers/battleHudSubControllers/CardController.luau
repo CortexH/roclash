@@ -3,6 +3,7 @@ local module = {}
 local UnitCard = require(script.Parent.Parent.Parent.components.UnitCard)
 local eventQueue = require(script.Parent.Parent.Parent.Parent.network.EnqueueEvent)
 local eventType = require(script.Parent.Parent.Parent.Parent.events.unitCard.CardAttackButtonClick)
+local moveEventType = require(script.Parent.Parent.Parent.Parent.events.unitCard.CardMoveButtonClick)
 
 local currentUnitCard = nil
 local battleHudScreen = nil
@@ -45,6 +46,12 @@ function module.showSelectedUnitCard(unitData: UnitCard.UnitCardProps)
         end))
     end
 
+    if currentUnitCard.btnMover then
+        table.insert(conns, currentUnitCard.btnMover.Activated:Connect(function(inputObject, clickCount)
+            onMoverClicked(unitData.unitId)
+        end))
+    end
+
 end
 
 -- Atualiza o estado observado do card atualmente exibido.
@@ -80,6 +87,22 @@ function onAtacarClicked(unitId)
         eventType = "CardAttackButtonClickedClient",
         data = {
             btnSelected = isAtacarSelected,
+            unitId = unitId
+        }
+    })
+
+end
+
+local isMoverSelected = false
+
+function onMoverClicked(unitId)
+    isMoverSelected = not isMoverSelected
+
+    eventQueue.enqueueEvent({
+        delay = 0,
+        eventType = "CardMoveButtonClickedClient",
+        data = {
+            btnSelected = isMoverSelected,
             unitId = unitId
         }
     })

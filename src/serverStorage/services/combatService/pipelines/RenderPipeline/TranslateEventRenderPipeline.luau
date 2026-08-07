@@ -87,6 +87,18 @@ function translateUnitPlacementCommandResponse(event : commandResponseType.unitP
 	return event
 end
 
+function translateUnitMoveCommandResponse(event, currentTime)
+	event.type = nil
+	event.shouldRender = nil
+	return event
+end
+
+function translateUnitAggroCommandResponse(event, currentTime)
+	event.type = nil
+	event.shouldRender = nil
+	return event
+end
+
 function translateUnitDiedEvent(event : eventType.unitDiedEvent, currentTime)
 	local renderEvent : renderEventType.unitDied = {
 		eventType = "UnitDied",
@@ -116,6 +128,8 @@ local enabledEvents = {
 	["DamageAppliedEvent"] = translateDamageAppliedEvent,
 	["UnitDiedEvent"] = translateUnitDiedEvent,
 	["UnitPlacementCommandResponse"] = translateUnitPlacementCommandResponse,
+	["UnitMoveCommandResponse"] = translateUnitMoveCommandResponse,
+	["UnitAggroCommandResponse"] = translateUnitAggroCommandResponse,
 }
 
 function module.translateEvent(event : eventType.defaultEventType, currentTime)

@@ -22,9 +22,9 @@ export type AttackIntent = {
 	["isValid"] : boolean
 }
 
-export type AttackIntentFailed = {
+export type AttackIntentRejected = {
     ["delay"] : number,
-	["eventType"] : "AttackIntentFailed",
+	["eventType"] : "AttackIntentRejected",
 	["type"] : "EVENT",
 	["data"] : {
 		["source"] : string,

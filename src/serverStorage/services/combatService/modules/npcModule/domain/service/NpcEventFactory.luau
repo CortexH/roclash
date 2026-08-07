@@ -80,46 +80,49 @@ function module.createUnitMovementPlanningEvent(delay, unitId, firstCell, path, 
 	}
 end
 
-function module.createMovementIntent(delay, unitId, targetCell, targetUnit, reason)
+function module.createMoveIntent(delay, unitId, targetCell, targetUnit, reason, origin)
 	return {
-		["eventType"] = "MovementIntent",
+		["eventType"] = "MoveIntent",
 		["delay"] = delay,
 		["type"] = "EVENT",
 		["data"] = {
 			["unitId"] = unitId,
 			["targetCell"] = targetCell,
 			["targetUnit"] = targetUnit,
-			["reason"] = reason
+			["reason"] = reason,
+			["origin"] = origin
 		},
 		["isValid"] = true
 	}
 end
 
-function module.createMovementIntentAccepted(delay, unitId, targetCell, targetUnit, reason)
+function module.createMoveIntentAccepted(delay, unitId, targetCell, targetUnit, reason, origin)
 	return {
-		["eventType"] = "MovementIntentAccepted",
+		["eventType"] = "MoveIntentAccepted",
 		["delay"] = delay,
 		["type"] = "EVENT",
 		["data"] = {
 			["unitId"] = unitId,
 			["targetCell"] = targetCell,
 			["targetUnit"] = targetUnit,
-			["reason"] = reason
+			["reason"] = reason,
+			["origin"] = origin
 		},
 		["isValid"] = true
 	}
 end
 
-function module.createMovementIntentRejected(delay, unitId, targetCell, targetUnit, reason)
+function module.createMoveIntentRejected(delay, unitId, targetCell, targetUnit, reason, origin)
 	return {
-		["eventType"] = "MovementIntentRejected",
+		["eventType"] = "MoveIntentRejected",
 		["delay"] = delay,
 		["type"] = "EVENT",
 		["data"] = {
 			["unitId"] = unitId,
 			["targetCell"] = targetCell,
 			["targetUnit"] = targetUnit,
-			["reason"] = reason
+			["reason"] = reason,
+			["origin"] = origin
 		},
 		["isValid"] = true
 	}
@@ -167,9 +170,9 @@ function module.createAttackStartedEvent(delay, unitId, targetId)
 	}	
 end
 
-function module.createAttackIntentFailed(sourceId, targetId, reason, originType, playerId)
+function module.createAttackIntentRejected(sourceId, targetId, reason, originType, playerId)
 	return {
-		["eventType"] = "AttackIntentFailed",
+		["eventType"] = "AttackIntentRejected",
 		["delay"] = 0,
 		["type"] = "EVENT",
 		["data"] = {

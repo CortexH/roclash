@@ -1,7 +1,6 @@
 local module = {}
 
 module.applies = {
-	["UnitMoveCommand"] = require(script.Parent.ListenUnitMoveCommand).handle,
 	--["UnitMovementStartedEvent"] = require(script.Parent.ListenMovementStartedMovement).handle,
 	["UnitMovementPlanningEvent"] = require(script.Parent.ListenUnitMovementPlanningEvent).handle,
 	["UnitMovementSegmentEvent"] = require(script.Parent.ListenMovementSegment).handle,
@@ -12,7 +11,6 @@ module.applies = {
 module.generates = {
 	"Generate_UnitMovementStartedEvent",
 	"Generate_UnitMovementResolvedEvent",
-	"Generate_UnitMoveCommandResponse",
 	"Generate_UnitStructureBlockingPathEvent"
 }
 

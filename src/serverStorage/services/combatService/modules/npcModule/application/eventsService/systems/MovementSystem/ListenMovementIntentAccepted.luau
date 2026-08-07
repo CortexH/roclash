@@ -2,7 +2,7 @@ local module = {}
 
 local domain = script.Parent.Parent.Parent.Parent.Parent.domain
 
-local intentTypes = require(game.ServerStorage.Server.services.combatService.shared.eventTypes.intents.MovementIntentEvent)
+local intentTypes = require(game.ServerStorage.Server.services.combatService.shared.eventTypes.intents.MoveIntentEvent)
 local eventService = require(domain.service.NpcEventFactory)
 
 local viewPort = require(domain.ports.BattleViewPort)
@@ -10,11 +10,11 @@ local mapPort = require(domain.ports.MapPort)
 
 local pathService = require(domain.service.PathService)
 
--- MovementIntentAcceptedHandler
+-- MoveIntentAcceptedHandler
 -- Responsável por transformar um Intent aceito em um planejamento de movimento.
 -- Executa o algoritmo A*, gera o caminho, identifica blockers e emite um UnitMovementPlanningEvent.
 -- Não aplica estado ao mundo.
-function module.handle(event : intentTypes.MovementIntentAccepted, context)
+function module.handle(event : intentTypes.MoveIntentAccepted, context)
 	if event.isValid == false then return {} end
 
 	local unit = viewPort.getSelfBattleView(event.data.unitId, context)
