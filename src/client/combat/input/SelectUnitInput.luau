@@ -67,6 +67,12 @@ function module.clearUnitSelection(unitId : string)
     end
 end
 
+-- Limpa a seleção atual (sem enviar comandos).
+function module.clearSelection()
+    interactionState.clientState.selection.currentSelectedUnit = nil
+    interactionState.clientState.selection.currentHoveredUnit = nil
+end
+
 function module.deselectUnit(unitId : string)
     eventsAPI.sendCommand({
         type = "DESELECT_UNIT",
