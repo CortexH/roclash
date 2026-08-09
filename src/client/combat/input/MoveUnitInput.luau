@@ -102,7 +102,13 @@ function module.beginSelect(selectedUnitId)
 	selectionManager.setInteraction(pointingServiceInstance)
 
 	-- Recalcula o preview quando a unit troca de célula durante a interação.
-	unitCellMonitor.monitor(selectedUnitId, function()
+	unitCellMonitor.monitor(selectedUnitId, function(cell)
+		-- Unit morreu/foi removida: encerra a interação e limpa o preview.
+		if not cell then
+			module.stopSelect()
+			return
+		end
+
 		-- Se a interação de mover não é mais a ativa (ex.: trocou para ATACAR/seleção),
 		-- encerra o monitoramento para evitar vazamento e recálculos indevidos.
 		local current = selectionManager.getCurrentInteraction()

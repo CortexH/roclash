@@ -75,6 +75,11 @@ function module.hideSelectedUnitCard()
 	for _, v in conns do v:Disconnect() end
 
 	currentUnitCard = nil
+
+	-- Reseta o estado dos botões de ação para que, ao reselecionar a unit,
+	-- o primeiro clique volte a ativar a interação (e não desativar).
+	isAtacarSelected = false
+	isMoverSelected = false
 end
 
 local isAtacarSelected = false
