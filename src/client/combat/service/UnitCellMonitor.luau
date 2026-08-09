@@ -12,12 +12,7 @@ local monitoredUnits = {}
 
 -- Retorna a célula atual da unit.
 -- Se a unit está em movimento, usa a posição interpolada; caso contrário, a célula estática.
--- Retorna nil se a unit não existe mais ou está morta.
 function module.getCurrentCell(unitId : string) : {x : number, y : number}?
-	local state = unitStateCache.get(unitId)
-	if not state then return nil end
-	if state.status and state.status.isDead then return nil end
-
 	local view = unitViewRegistry.get(unitId)
 	if view and view.visual and view.visual.currentMovement then
 		local ct = gameState.getCurrentTime()
@@ -30,7 +25,8 @@ function module.getCurrentCell(unitId : string) : {x : number, y : number}?
 		end
 	end
 
-	if state.placed and state.placed.cell then
+	local state = unitStateCache.get(unitId)
+	if state and state.placed and state.placed.cell then
 		return state.placed.cell
 	end
 
@@ -53,12 +49,10 @@ RunService.Heartbeat:Connect(function()
 	for unitId, callback in pairs(monitoredUnits) do
 		local cell = module.getCurrentCell(unitId)
 
-		-- Unit não existe mais (morreu/foi removida): notifica o consumidor
-		-- com nil para que ele possa encerrar a interação, e remove o monitoramento.
+		-- Unit não existe mais (morreu/foi removida): encerra o monitoramento.
 		if not cell then
 			module.unmonitor(unitId)
 			lastCells[unitId] = nil
-			callback(nil)
 			continue
 		end
 
