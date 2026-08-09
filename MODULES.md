@@ -87,6 +87,7 @@ O sistema é dividido em módulos, cada um com uma responsabilidade clara e um `
 - `UnitPlacementCommand` → `SpawnIntent`
 - `UnitAggroCommand` → `AggroIntent`
 - `UnitSelectQuery` → `UnitSelectQuerySuccess` / `UnitSelectQueryFailure`
+- `UnitPathfindingQuery` → `UnitPathfindingQuerySuccess` / `UnitPathfindingQueryFailure` (sistema `UnitPathfindingSystem`, consulta o `PathService` do npcModule para o preview de caminho)
 
 ---
 

@@ -26,7 +26,7 @@ function module.validateUnitPlacement(
 		return false, "Behavior deve ser 'AGGRESSIVE', 'DEFENSIVE' ou 'PEACEFUL'"
 	end
 	
-	if not mapPort.isCellValid(cell) then
+	if not mapPort.isCellValid(cell, context) then
 		return false, "Posição inválida"
 	end
 	

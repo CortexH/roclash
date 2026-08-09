@@ -109,6 +109,11 @@ function module:_startUnitMode()
     end)
 end
 
+local function sameCell(a, b)
+    if a == nil or b == nil then return a == b end
+    return a.x == b.x and a.y == b.y
+end
+
 function module:_startCellMode()
     self:_stopConnections()
 
@@ -116,7 +121,7 @@ function module:_startCellMode()
         local x, y = mouse.Hit.X, mouse.Hit.Z
         local cell = mapUtils.getCellByPosition({x = x, y = y})
 
-        if cell == self.cellData.hoveringCell then
+        if sameCell(cell, self.cellData.hoveringCell) then
             return
         end
 

@@ -33,4 +33,13 @@ export type unitMoveCommand = {
 	unitId : string
 }
 
+export type unitPathfindingCommand = {
+	type : "PATHFIND_UNIT",
+	target : "UNIT",
+	signature : string,
+	unitId : string,
+	start : {x : number, y : number},
+	goal : {x : number, y : number}
+}
+
 return module

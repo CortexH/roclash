@@ -13,7 +13,8 @@ local handlers = {
 		["AGGRO_UNIT"] = unitCommands.sendUnitAggroCommandRequest,
 
 		-- QUERIES
-		["SELECT_UNIT"] = unitQueries.sendUnitSelectQueryRequest
+		["SELECT_UNIT"] = unitQueries.sendUnitSelectQueryRequest,
+		["PATHFIND_UNIT"] = unitQueries.sendUnitPathfindingQueryRequest
 	}
 }
 

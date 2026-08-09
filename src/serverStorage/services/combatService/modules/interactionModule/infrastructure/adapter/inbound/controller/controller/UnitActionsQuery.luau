@@ -22,4 +22,23 @@ commands.sendUnitSelectQueryRequest = function(player: Players, request : comman
     enqueueEvent.enqueueEvent(item)
 end
 
+commands.sendUnitPathfindingQueryRequest = function(player: Players, request)
+    local item = {
+        event = {
+            eventType = "UnitPathfindingQuery",
+            type = "QUERY",
+            delay = 0,
+            signature = request.signature,
+            requesterId = tostring(player.UserId),
+            data = {
+                unitId = request.unitId,
+                start = request.start,
+                goal = request.goal
+            }
+        },
+        targetQueue = tostring(player.UserId),
+    }
+    enqueueEvent.enqueueEvent(item)
+end
+
 return module

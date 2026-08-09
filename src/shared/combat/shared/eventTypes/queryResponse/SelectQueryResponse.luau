@@ -47,4 +47,38 @@ export type UnitSelectQueryFailureResponse = {
     }
 }
 
+export type PathSegmentResponse = {
+    fromCell: {x: number, y: number},
+    toCell: {x: number, y: number},
+    blocker: string?
+}
+
+export type UnitPathfindingQuerySuccessResponse = {
+    eventType: "UnitPathfindingQuerySuccessResponse",
+    delay: number,
+    signature: string,
+    requesterId: string,
+    data: {
+        unitId: string,
+        start: {x: number, y: number},
+        goal: {x: number, y: number},
+        path: {PathSegmentResponse},
+        reachable: boolean
+    }
+}
+
+export type UnitPathfindingQueryFailureResponse = {
+    eventType: "UnitPathfindingQueryFailureResponse",
+    delay: number,
+    signature: string,
+    requesterId: string,
+    data: {
+        unitId: string,
+        reason : {
+            message: string,
+            type: string
+        }
+    }
+}
+
 return module

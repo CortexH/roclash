@@ -219,6 +219,24 @@ UnitSelectQuerySuccess
 UnitSelectQuerySuccessResponse (cliente)
 ```
 
+## 1.12 Fluxo de Preview de Caminho (Pathfinding)
+
+Quando o jogador entra no modo `MOVER` e aponta para uma célula, o frontend consulta o backend para obter o caminho que a Unit percorreria, sem executar o movimento:
+
+```text
+PATHFIND_UNIT (cliente)
+    ↓
+UnitPathfindingQuery
+    ↓ (interactionModule: UnitPathfindingSystem)
+UnitPathfindingQuerySuccess
+    ↓
+UnitPathfindingQuerySuccessResponse (cliente)
+    ↓
+preview visual do caminho
+```
+
+A Query é disparada apenas quando a célula sob o mouse muda. O backend permanece como fonte de verdade do caminho (PathService). O preview **não** executa o movimento real — a confirmação continua usando o fluxo de `MoveIntent`.
+
 ## 1.11 Fluxo de UI State (UI Diff)
 
 O `UIStateUpdateResponse` é gerado quando o estado observado muda. Por enquanto, o dano é o principal trigger:
@@ -298,6 +316,7 @@ Listagem de todos os eventos do sistema, organizados por módulo/categoria, com 
 | Evento | O que faz | Gera |
 |--------|-----------|------|
 | `UnitSelectQuery` | query de seleção de uma unit | `UnitSelectQuerySuccess` / `UnitSelectQueryFailure` |
+| `UnitPathfindingQuery` | query de preview de caminho de uma unit | `UnitPathfindingQuerySuccess` / `UnitPathfindingQueryFailure` |
 
 > **Semântica das Queries:** o `eventType` identifica a operação solicitada. O campo `signature` identifica o consumidor/contexto que fez a requisição (ex: `"UNIT_CARD"`), é enviado pelo frontend e ecoado pelo servidor na resposta, permitindo que múltiplos listeners da mesma operação se diferenciem sem criar eventos por consumidor. O `requesterId` identifica o responsável pela requisição (obtido do `player.UserId` no servidor).
 
@@ -374,6 +393,8 @@ Listagem de todos os eventos do sistema, organizados por módulo/categoria, com 
 |--------|-----------|
 | `UnitSelectQuerySuccessResponse` | resposta de sucesso da query de seleção |
 | `UnitSelectQueryFailureResponse` | resposta de falha da query de seleção |
+| `UnitPathfindingQuerySuccessResponse` | resposta de sucesso da query de preview de caminho |
+| `UnitPathfindingQueryFailureResponse` | resposta de falha da query de preview de caminho |
 
 > A resposta ecoa a `signature` do consumidor que originou a Query, permitindo que múltiplos listeners da mesma operação se diferenciem. Cada listener possui uma `signature` fixa e ignora respostas cuja `signature` não seja a sua.
 

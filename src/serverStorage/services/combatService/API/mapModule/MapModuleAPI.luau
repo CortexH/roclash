@@ -12,6 +12,7 @@ local module = {
 
 	isCellWalkable = function(cell : cellType, context : {}) end,
 	isCellReserved = function(cell : cellType, context : {}) return end,
+	isCellInBattleField = function(cell : cellType, context : {}) return true end,
 }
 
 return module

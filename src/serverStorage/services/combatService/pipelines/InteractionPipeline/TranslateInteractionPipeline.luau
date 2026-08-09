@@ -40,8 +40,43 @@ function translateSelectQuery(event, currentTime)
     return translatedEvent
 end
 
+function translatePathfindingQuery(event, currentTime)
+    local translatedEvent = {
+        eventType = "UnitPathfindingQuerySuccessResponse",
+        delay = event.delay,
+        signature = event.signature,
+        requesterId = event.requesterId,
+        data = {
+            unitId = event.data.unitId,
+            start = event.data.start,
+            goal = event.data.goal,
+            path = event.data.path,
+            reachable = event.data.reachable
+        }
+    }
+
+    return translatedEvent
+end
+
+function translatePathfindingQueryFailure(event, currentTime)
+    local translatedEvent = {
+        eventType = "UnitPathfindingQueryFailureResponse",
+        delay = event.delay,
+        signature = event.signature,
+        requesterId = event.requesterId,
+        data = {
+            unitId = event.data.unitId,
+            reason = event.data.reason
+        }
+    }
+
+    return translatedEvent
+end
+
 module.translators = {
-    ["UnitSelectQuerySuccess"] = translateSelectQuery
+    ["UnitSelectQuerySuccess"] = translateSelectQuery,
+    ["UnitPathfindingQuerySuccess"] = translatePathfindingQuery,
+    ["UnitPathfindingQueryFailure"] = translatePathfindingQueryFailure
 }
 
 function module.translateEvent(event, currentTime)

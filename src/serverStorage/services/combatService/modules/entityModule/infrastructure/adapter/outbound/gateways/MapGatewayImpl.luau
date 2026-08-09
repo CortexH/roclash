@@ -11,6 +11,10 @@ gateway.validateUnitPlacement = function(cell, context)
 	return true
 end
 
+gateway.isCellValid = function(cell, context)
+	return mapModuleAPI.isCellInBattleField(cell, context)
+end
+
 gateway.getPositionFromCell = function(cell) : typeof(mapModuleAPI.getWorldPositionByCell())
 	local request : mapModuleAPI.cellType = cell
 	local response : Vector2 = mapModuleAPI.getWorldPositionByCell(request)
