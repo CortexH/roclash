@@ -16,7 +16,11 @@ end
 
 function module.showSelectedUnitCard(unitData: UnitCard.UnitCardProps)
     module.hideSelectedUnitCard()
-    
+
+    -- Garante que os botões de ação comecem desligados ao exibir um novo card.
+    isAtacarSelected = false
+    isMoverSelected = false
+
     currentUnitCard = UnitCard.new({
         unitId = unitData.unitId,
         unitName = unitData.unitName,
@@ -80,6 +84,13 @@ function module.hideSelectedUnitCard()
 	-- o primeiro clique volte a ativar a interação (e não desativar).
 	isAtacarSelected = false
 	isMoverSelected = false
+end
+
+-- Esconde o card apenas se ele estiver exibindo a unit informada.
+function module.hideSelectedUnitCardIfUnit(unitId)
+	if currentUnitCard and currentUnitCard.unitId == unitId then
+		module.hideSelectedUnitCard()
+	end
 end
 
 local isAtacarSelected = false

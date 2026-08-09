@@ -59,6 +59,14 @@ function module.stopSelect()
         highlight:Destroy()
     end
     highlightedModels = {}
+    pointingServiceInstance = nil
+end
+
+-- Encerra a interação de ataque apenas se ela estiver ativa para a unit informada.
+function module.stopSelectIfUnit(unitId : string)
+    if interactionState.clientState.selection.currentSelectedUnit == unitId then
+        module.stopSelect()
+    end
 end
 
 function module.selectUnit(unitId : string, selectedUnitId : string)

@@ -57,6 +57,14 @@ function module.stopSelect()
         highlight:Destroy()
     end
     highlightedModels = {}
+    pointingServiceInstance = nil
+end
+
+-- Limpa a seleção atual se ela apontar para a unit informada (ex.: unit morta).
+function module.clearUnitSelection(unitId : string)
+    if interactionState.clientState.selection.currentSelectedUnit == unitId then
+        interactionState.clientState.selection.currentSelectedUnit = nil
+    end
 end
 
 function module.deselectUnit(unitId : string)

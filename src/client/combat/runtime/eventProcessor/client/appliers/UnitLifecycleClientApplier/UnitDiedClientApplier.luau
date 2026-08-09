@@ -9,16 +9,29 @@ local definition = require(states.cache.UnitDefinitionCache)
 
 local render = require(script.Parent.Parent.Parent.Parent.Parent.Parent.render.unit.UnitLifecycleRender)
 
+local root = script.Parent.Parent.Parent.Parent.Parent.Parent
+local moveInput = require(root.input.MoveUnitInput)
+local attackInput = require(root.input.AttackUnitInput)
+local selectInput = require(root.input.SelectUnitInput)
+local cardController = require(root.ui.controllers.battleHudSubControllers.CardController)
+
 function module.apply(event : clientEvents.unitDied)
-	local state = stateCache.get(event.data.unitId)
-	
+	local unitId = event.data.unitId
+
+	local state = stateCache.get(unitId)
+
 	state.placed = false
 	state.health = 0
 	state.maxHealth = 0
 	state.owner = nil
-		
-	render.kill(event.data.unitId)
-	
+
+	-- Encerra interações/seleções relacionadas à unit morta.
+	moveInput.stopSelectIfUnit(unitId)
+	attackInput.stopSelectIfUnit(unitId)
+	selectInput.clearUnitSelection(unitId)
+	cardController.hideSelectedUnitCardIfUnit(unitId)
+
+	render.kill(unitId)
 end
 
 return module

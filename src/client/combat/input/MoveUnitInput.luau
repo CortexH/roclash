@@ -131,6 +131,14 @@ function module.stopSelect()
 
 	currentUnitId = nil
 	currentGoalCell = nil
+	pointingServiceInstance = nil
+end
+
+-- Encerra a interação de movimento apenas se ela estiver ativa para a unit informada.
+function module.stopSelectIfUnit(unitId : string)
+	if currentUnitId == unitId then
+		module.stopSelect()
+	end
 end
 
 function module.selectCell(cell : {x : number, y : number}, selectedUnitId : string)
