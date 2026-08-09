@@ -4,18 +4,22 @@ local interactionState = require(script.Parent.Parent.state.InteractionState)
 local eventsAPI = require(script.Parent.Parent.network.CommandSender)
 local PointingService = require(script.Parent.Parent.service.PointingService)
 local selectionManager = require(script.Parent.Parent.managers.SelecionManager)
+local eventQueue = require(script.Parent.Parent.network.EnqueueEvent)
+local signatures = require(script.Parent.Parent.consts.SelectSignatures)
 
 local pointingServiceInstance
-local highlightedModels: {[Model]: Highlight} = {}
 
-local function highlightModel(model: Model)
-    local highlight = Instance.new("Highlight")
-    highlight.FillTransparency = 0.7
-    highlight.OutlineTransparency = 0
-    highlight.FillColor = Color3.fromRGB(0, 255, 0)
-    highlight.OutlineColor = Color3.fromRGB(0, 200, 0)
-    highlight.Parent = model
-    return highlight
+-- Emite o evento de hover/unhover da unit para os listeners (ex.: highlight).
+local function emitHover(unitId : string, hovering : boolean)
+	eventQueue.enqueueEvent({
+		delay = 0,
+		eventType = "UnitHoverClient",
+		data = {
+			unitId = unitId,
+			hovering = hovering,
+			signature = signatures.UNIT_SELECT
+		}
+	})
 end
 
 function module.beginSelect()
@@ -28,35 +32,30 @@ function module.beginSelect()
             module.selectUnit(unitId)
         end,
         onHoverStart = function(view, unitId)
-            local model = view.model
-            if model and not highlightedModels[model] then
-                highlightedModels[model] = highlightModel(model)
-            end
+            emitHover(unitId, true)
             interactionState.clientState.selection.currentHoveredUnit = unitId
         end,
         onHoverEnd = function(view, unitId)
-            local model = view.model
-            if model and highlightedModels[model] then
-                highlightedModels[model]:Destroy()
-                highlightedModels[model] = nil
-            end
+            emitHover(unitId, false)
             if interactionState.clientState.selection.currentHoveredUnit == unitId then
                 interactionState.clientState.selection.currentHoveredUnit = nil
             end
         end,
     }
 
-    pointingServiceInstance = PointingService.new("UNIT", configs, "UNIT_SELECT")
+    pointingServiceInstance = PointingService.new("UNIT", configs, signatures.UNIT_SELECT)
     selectionManager.setInteraction(pointingServiceInstance)
 end
 
 function module.stopSelect()
     selectionManager.clearInteraction()
 
-    for model, highlight in pairs(highlightedModels) do
-        highlight:Destroy()
+    -- Emite unhover para a unit atualmente hovered, limpando o highlight.
+    local hovered = interactionState.clientState.selection.currentHoveredUnit
+    if hovered then
+        emitHover(hovered, false)
+        interactionState.clientState.selection.currentHoveredUnit = nil
     end
-    highlightedModels = {}
 end
 
 function module.deselectUnit(unitId : string)

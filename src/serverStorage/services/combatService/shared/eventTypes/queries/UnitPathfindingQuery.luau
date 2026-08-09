@@ -15,7 +15,9 @@ export type UnitPathfindingQuery = {
 	data: {
 		unitId: string,
 		start: {x: number, y: number},
-		goal: {x: number, y: number}
+		goal: {x: number, y: number},
+		-- Se presente, o destino é a célula da unit alvo (ex.: hover de ataque).
+		goalUnitId: string?
 	}
 }
 
@@ -30,7 +32,9 @@ export type UnitPathfindingQuerySuccess = {
 		start: {x: number, y: number},
 		goal: {x: number, y: number},
 		path: {PathSegment},
-		reachable: boolean
+		reachable: boolean,
+		-- Ids das units/estruturas que bloqueiam o caminho (serão destruídas).
+		blockers: {string}
 	}
 }
 

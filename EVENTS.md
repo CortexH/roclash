@@ -316,7 +316,7 @@ Listagem de todos os eventos do sistema, organizados por módulo/categoria, com 
 | Evento | O que faz | Gera |
 |--------|-----------|------|
 | `UnitSelectQuery` | query de seleção de uma unit | `UnitSelectQuerySuccess` / `UnitSelectQueryFailure` |
-| `UnitPathfindingQuery` | query de preview de caminho de uma unit | `UnitPathfindingQuerySuccess` / `UnitPathfindingQueryFailure` |
+| `UnitPathfindingQuery` | query de preview de caminho de uma unit (destino pode ser uma posição `goal` ou uma unit via `goalUnitId`, ex.: hover de ataque) | `UnitPathfindingQuerySuccess` / `UnitPathfindingQueryFailure` |
 
 > **Semântica das Queries:** o `eventType` identifica a operação solicitada. O campo `signature` identifica o consumidor/contexto que fez a requisição (ex: `"UNIT_CARD"`), é enviado pelo frontend e ecoado pelo servidor na resposta, permitindo que múltiplos listeners da mesma operação se diferenciem sem criar eventos por consumidor. O `requesterId` identifica o responsável pela requisição (obtido do `player.UserId` no servidor).
 
@@ -393,7 +393,7 @@ Listagem de todos os eventos do sistema, organizados por módulo/categoria, com 
 |--------|-----------|
 | `UnitSelectQuerySuccessResponse` | resposta de sucesso da query de seleção |
 | `UnitSelectQueryFailureResponse` | resposta de falha da query de seleção |
-| `UnitPathfindingQuerySuccessResponse` | resposta de sucesso da query de preview de caminho |
+| `UnitPathfindingQuerySuccessResponse` | resposta de sucesso da query de preview de caminho (path completo via pathfinding recursivo + `blockers` — units/estruturas que serão destruídas) |
 | `UnitPathfindingQueryFailureResponse` | resposta de falha da query de preview de caminho |
 
 > A resposta ecoa a `signature` do consumidor que originou a Query, permitindo que múltiplos listeners da mesma operação se diferenciem. Cada listener possui uma `signature` fixa e ignora respostas cuja `signature` não seja a sua.
@@ -413,6 +413,7 @@ Listagem de todos os eventos do sistema, organizados por módulo/categoria, com 
 | `SelectUnitButtonClickedClient` | botão de seleção de unit clicado |
 | `CardAttackButtonClickedClient` | botão de atacar do card clicado |
 | `CardMoveButtonClickedClient` | botão de mover do card clicado |
+| `UnitHoverClient` | hover/unhover de uma unit; contém `signature` de quem originou (ex.: `UNIT_SELECT`, `UNIT_ATTACK_SELECT`); consumido por listeners como o highlight |
 | `BeginUnitSelectionClientEvent` | início do modo de seleção de unit |
 | `StopUnitSelectionClientEvent` | fim do modo de seleção de unit |
 | `BeginUnitAttackSelectionClientEvent` | início do modo de seleção de ataque |

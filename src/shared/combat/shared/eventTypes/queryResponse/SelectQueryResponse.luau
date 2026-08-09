@@ -63,7 +63,8 @@ export type UnitPathfindingQuerySuccessResponse = {
         start: {x: number, y: number},
         goal: {x: number, y: number},
         path: {PathSegmentResponse},
-        reachable: boolean
+        reachable: boolean,
+        blockers: {string}
     }
 }
 

@@ -51,7 +51,8 @@ function translatePathfindingQuery(event, currentTime)
             start = event.data.start,
             goal = event.data.goal,
             path = event.data.path,
-            reachable = event.data.reachable
+            reachable = event.data.reachable,
+            blockers = event.data.blockers
         }
     }
 

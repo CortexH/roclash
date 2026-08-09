@@ -10,8 +10,7 @@ local cellHighlight = require(script.Parent.Parent.render.CellHighlightRender)
 local pathPreview = require(script.Parent.Parent.render.PathPreviewRender)
 local unitStateCache = require(script.Parent.Parent.state.cache.UnitStateCache)
 local unitCellMonitor = require(script.Parent.Parent.service.UnitCellMonitor)
-
-local MOVE_INTERACTION_ID = "UNIT_MOVE_SELECT"
+local signatures = require(script.Parent.Parent.consts.SelectSignatures)
 
 local pointingServiceInstance
 local currentGoalCell = nil
@@ -98,16 +97,19 @@ function module.beginSelect(selectedUnitId)
 		end,
 	}
 
-	pointingServiceInstance = PointingService.new("CELL", configs, MOVE_INTERACTION_ID)
+	pointingServiceInstance = PointingService.new("CELL", configs, signatures.UNIT_MOVE_SELECT)
 	selectionManager.setInteraction(pointingServiceInstance)
 
 	-- Recalcula o preview quando a unit troca de célula durante a interação.
 	unitCellMonitor.monitor(selectedUnitId, function()
 		-- Se a interação de mover não é mais a ativa (ex.: trocou para ATACAR/seleção),
-		-- encerra o monitoramento para evitar vazamento e recálculos indevidos.
+		-- encerra apenas o monitoramento e o estado local do mover, sem limpar a
+		-- interação atual (que pode ser outra, ex.: ataque).
 		local current = selectionManager.getCurrentInteraction()
-		if not current or current:getId() ~= MOVE_INTERACTION_ID then
-			module.stopSelect()
+		if not current or current:getId() ~= signatures.UNIT_MOVE_SELECT then
+			unitCellMonitor.unmonitor(selectedUnitId)
+			currentUnitId = nil
+			currentGoalCell = nil
 			return
 		end
 		refreshPathPreview()
@@ -125,6 +127,14 @@ function module.stopSelect()
 
 	currentUnitId = nil
 	currentGoalCell = nil
+end
+
+-- Encerra a interação de mover se a unit informada é a unit em interação.
+-- Usado quando a unit morre, para parar de disparar UnitPathfindingQuery.
+function module.stopIfUnit(unitId : string)
+	if currentUnitId == unitId then
+		module.stopSelect()
+	end
 end
 
 function module.selectCell(cell : {x : number, y : number}, selectedUnitId : string)

@@ -4,6 +4,7 @@ local query = require(game.ServerStorage.Server.services.combatService.shared.ev
 
 local npcDomain = game.ServerStorage.Server.services.combatService.modules.npcModule.domain
 local viewPort = require(npcDomain.ports.BattleViewPort)
+local mapPort = require(npcDomain.ports.MapPort)
 local pathService = require(npcDomain.service.PathService)
 
 -- Limite de distância Manhattan entre origem e goal.
@@ -32,6 +33,19 @@ function module.handle(event : query.UnitPathfindingQuery, context)
 
 	local fromCell = unit.currentCell or event.data.start
 	local goal = event.data.goal
+	local toTargetCell = nil
+
+	-- Se o destino é uma unit (goalUnitId), usa a célula mais próxima alcançável
+	-- do alvo como destino do A* (mesmo critério do movimento real) e a célula
+	-- real do alvo como toTargetCell (para o blocker no último segmento).
+	if event.data.goalUnitId then
+		local targetView = viewPort.getSelfBattleView(event.data.goalUnitId, context)
+		if not targetView then
+			return {generateFail(event, "GOAL_UNIT_NOT_FOUND")}
+		end
+		goal = mapPort.getNearestPossibleCell(unitId, event.data.goalUnitId, context)
+		toTargetCell = targetView.currentCell
+	end
 
 	if not goal then
 		return {generateFail(event, "INVALID_GOAL")}
@@ -43,11 +57,12 @@ function module.handle(event : query.UnitPathfindingQuery, context)
 		return {generateFail(event, "GOAL_OUT_OF_BOUNDS")}
 	end
 
-	local result = pathService.AStarPathRequest(
+	local result = pathService.AStarPathRequestWithBlockers(
 		{
 			unitId = unitId,
 			fromCell = fromCell,
 			toCell = goal,
+			toTargetCell = toTargetCell,
 		},
 		context
 	)
@@ -71,7 +86,8 @@ function generateSuccess(event : query.UnitPathfindingQuery, start, goal, result
 			start = start,
 			goal = goal,
 			path = result.path,
-			reachable = result.reachable
+			reachable = result.reachable,
+			blockers = result.blockers
 		}
 	}
 end

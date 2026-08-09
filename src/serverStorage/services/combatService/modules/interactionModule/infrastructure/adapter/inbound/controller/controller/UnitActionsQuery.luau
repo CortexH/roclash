@@ -31,9 +31,10 @@ commands.sendUnitPathfindingQueryRequest = function(player: Players, request)
             signature = request.signature,
             requesterId = tostring(player.UserId),
             data = {
-                unitId = request.unitId,
-                start = request.start,
-                goal = request.goal
+            	unitId = request.unitId,
+            	start = request.start,
+            	goal = request.goal,
+            	goalUnitId = request.goalUnitId
             }
         },
         targetQueue = tostring(player.UserId),

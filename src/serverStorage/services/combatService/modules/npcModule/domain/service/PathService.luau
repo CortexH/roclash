@@ -18,6 +18,12 @@ export type AStarResult = {
 	reachable: boolean
 }
 
+export type AStarResultWithBlockers = {
+	path: {AStarSegment},
+	reachable: boolean,
+	blockers: {string}
+}
+
 local mapPort = require(script.Parent.Parent.ports.MapPort)
 
 function module.AStarPathRequest(request : AStarRequest, context) : AStarResult
@@ -230,6 +236,54 @@ function module.AStarPathRequest(request : AStarRequest, context) : AStarResult
 		path = segments,
 		reachable = false
 	}
+end
+
+-- Pathfinding recursivo: continua o caminho a partir de cada blocker
+-- (simulando a destruição da wall/estrutura), acumulando os segmentos e
+-- retornando a lista de blockers encontrados no caminho.
+-- Usado no preview de path (movimento e ataque) para mostrar o caminho completo.
+function module.AStarPathRequestWithBlockers(request : AStarRequest, context) : AStarResultWithBlockers
+	local allSegments = {}
+	local blockers = {}
+	local fromCell = request.fromCell
+	local goal = request.toCell
+	local toTargetCell = request.toTargetCell
+	local maxIterations = 5
+
+	for _ = 1, maxIterations do
+		local result = module.AStarPathRequest({
+			unitId = request.unitId,
+			fromCell = fromCell,
+			toCell = goal,
+			toTargetCell = toTargetCell,
+		}, context)
+
+		if result == nil then
+			return { path = allSegments, reachable = false, blockers = blockers }
+		end
+
+		for _, seg in ipairs(result.path) do
+			table.insert(allSegments, seg)
+		end
+
+		local last = result.path[#result.path]
+		local blockerId = last and last.blocker
+
+		if not blockerId then
+			return { path = allSegments, reachable = result.reachable, blockers = blockers }
+		end
+
+		table.insert(blockers, blockerId)
+
+		local blockerUnit = context["UnitsBC"]:getActiveUnitById(blockerId)
+		if not blockerUnit then
+			return { path = allSegments, reachable = false, blockers = blockers }
+		end
+
+		fromCell = blockerUnit.currentCell
+	end
+
+	return { path = allSegments, reachable = false, blockers = blockers }
 end
 
 return module

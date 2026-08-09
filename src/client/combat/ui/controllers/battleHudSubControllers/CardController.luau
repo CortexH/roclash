@@ -10,6 +10,12 @@ local battleHudScreen = nil
 
 local conns = {}
 
+-- Estado dos botões de ação do card (MOVER/ATACAR).
+-- Declarados no topo para serem upvalues válidos de hideSelectedUnitCard,
+-- que os reseta ao esconder o card (evita toggle residual ao reselecionar).
+local isMoverSelected = false
+local isAtacarSelected = false
+
 function module.init(selfBattleHudScreen)
     battleHudScreen = selfBattleHudScreen
 end
@@ -75,12 +81,24 @@ function module.hideSelectedUnitCard()
 	for _, v in conns do v:Disconnect() end
 
 	currentUnitCard = nil
+
+	-- Reseta o estado dos botões de ação para que o próximo clique
+	-- em MOVER/ATACAR inicie a interação (evita toggle residual ao
+	-- deselecionar/reselecionar a unit).
+	module.resetActionButtons()
 end
 
-local isAtacarSelected = false
+-- Reseta o estado dos botões de ação (MOVER/ATACAR).
+function module.resetActionButtons()
+	isMoverSelected = false
+	isAtacarSelected = false
+end
 
 function onAtacarClicked(unitId)
     isAtacarSelected = not isAtacarSelected
+    if isAtacarSelected then
+        isMoverSelected = false
+    end
 
     eventQueue.enqueueEvent({
         delay = 0,
@@ -93,10 +111,11 @@ function onAtacarClicked(unitId)
 
 end
 
-local isMoverSelected = false
-
 function onMoverClicked(unitId)
     isMoverSelected = not isMoverSelected
+    if isMoverSelected then
+        isAtacarSelected = false
+    end
 
     eventQueue.enqueueEvent({
         delay = 0,

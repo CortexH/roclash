@@ -314,6 +314,7 @@ Indicar quais documentos foram alterados, especialmente:
 
 * `EVENTS.md`;
 * `MODULES.md`;
+* Passar o documento da funcionalidade (bug, task ou refactor) para o diretório 'finished' na mesma pasta do item
 * outros documentos relevantes.
 
 ### Validação
