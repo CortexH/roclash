@@ -16,6 +16,15 @@ local MAX_PATH_DISTANCE = 200
 function module.handle(event : query.UnitPathfindingQuery, context)
 	local unitId = event.data.unitId
 
+	local entity = context["UnitsBC"]:getActiveUnitById(unitId)
+	if not entity then
+		return {generateFail(event, "UNIT_NOT_FOUND")}
+	end
+
+	if entity:isDead() then
+		return {generateFail(event, "DEAD_UNIT")}
+	end
+
 	local unit = viewPort.getSelfBattleView(unitId, context)
 	if not unit then
 		return {generateFail(event, "UNIT_NOT_FOUND")}
