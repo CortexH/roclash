@@ -391,12 +391,15 @@ Listagem de todos os eventos do sistema, organizados por módulo/categoria, com 
 
 | Evento | O que faz |
 |--------|-----------|
-| `UnitSelectQuerySuccessResponse` | resposta de sucesso da query de seleção |
+| `UnitSelectQuerySuccessResponse` | resposta de sucesso da query de seleção; pode incluir `unitName` e `relationship` (`ALLY`, `ENEMY` ou `NEUTRAL`) para apresentação opcional no card |
 | `UnitSelectQueryFailureResponse` | resposta de falha da query de seleção |
 | `UnitPathfindingQuerySuccessResponse` | resposta de sucesso da query de preview de caminho (path completo via pathfinding recursivo + `blockers` — units/estruturas que serão destruídas) |
 | `UnitPathfindingQueryFailureResponse` | resposta de falha da query de preview de caminho |
 
 > A resposta ecoa a `signature` do consumidor que originou a Query, permitindo que múltiplos listeners da mesma operação se diferenciem. Cada listener possui uma `signature` fixa e ignora respostas cuja `signature` não seja a sua.
+>
+> `unitName` e `relationship` são opcionais. Quando ausentes, o frontend omite os respectivos elementos em vez de inferir nome ou relação a partir de permissões como `canTarget` e `canMove`.
+> Os grupos e valores de apresentação (`stats`, `attacker` e `npcUnit`) também podem ser parciais na resposta; a Unit Card renderiza apenas cada valor efetivamente recebido, preservando `0` como valor válido.
 
 ## 3.9 UI State (servidor → cliente)
 

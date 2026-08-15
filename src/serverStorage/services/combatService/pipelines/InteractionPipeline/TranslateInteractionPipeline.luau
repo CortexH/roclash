@@ -13,6 +13,7 @@ function translateSelectQuery(event, currentTime)
             unitId = event.data.unitId,
             unitName = event.data.unitName,
             unitType = event.data.unitType,
+            relationship = event.data.relationship,
             stats = {
                 health = event.data.stats.health,
                 maxHealth = event.data.stats.maxHealth

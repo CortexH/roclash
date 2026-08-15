@@ -1,5 +1,7 @@
 local module = {}
 
+export type UnitRelationship = "ALLY" | "ENEMY" | "NEUTRAL"
+
 export type UnitSelectQuerySuccessResponse = {
     eventType: "UnitSelectQuerySuccessResponse",
     delay: number,
@@ -7,29 +9,30 @@ export type UnitSelectQuerySuccessResponse = {
     requesterId: string,
     data: {
         unitId: string,
-        unitName: string,
-        unitType : string,
+        unitName: string?,
+        unitType : string?,
+        relationship: UnitRelationship?,
         stats: {
-            health: number,
-            maxHealth : number,
-        },
+            health: number?,
+            maxHealth : number?,
+        }?,
         attacker : {
-            damage: number,
-            attackRange: number,
-            attackSpeed: number,
+            damage: number?,
+            attackRange: number?,
+            attackSpeed: number?,
         }?,
         npcUnit : {
-            weapon : string,
-            equipment : string,
-            behavior : string,
-            aggroRange : number,
-            walkspeed : number
+            weapon : string?,
+            equipment : string?,
+            behavior : string?,
+            aggroRange : number?,
+            walkspeed : number?
         }?,
         structureUnit : {
-            structureType : number
+            structureType : number?
         }?,
-        canTarget : boolean,
-        canMove : boolean
+        canTarget : boolean?,
+        canMove : boolean?
     }
 }
 

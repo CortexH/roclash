@@ -196,3 +196,19 @@ se HP <= 0, gera UnitDiedEvent
     ↓ (enfileirado e processado)
 UnitDiedEvent → (applier marca morta) → (system gera UnitAggroStoppedEvent, TargetLostEvent...)
 ```
+
+---
+
+# Componentes visuais do cliente
+
+## ProgressBar
+
+**Local:** `src/client/assets/components/bars/ProgressBar.luau`
+
+Componente visual genérico para representar uma proporção entre `0` e `1`. É responsável somente pela estrutura da barra e pela atualização segura do preenchimento; não conhece HP nem regras de gameplay.
+
+## CompactActionButton
+
+**Local:** `src/client/assets/components/buttons/CompactActionButton.luau`
+
+Botão compacto com ícone, texto, cor de destaque e estado selecionado persistente. É usado em ações contextuais que precisam permanecer legíveis em painéis pequenos, como `MOVER` e `ATACAR` na Unit Card.

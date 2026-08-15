@@ -26,13 +26,10 @@ function module.showSelectedUnitCard(unitData: UnitCard.UnitCardProps)
     currentUnitCard = UnitCard.new({
         unitId = unitData.unitId,
         unitName = unitData.unitName,
-        rarity = unitData.rarity,
+        unitType = unitData.unitType,
+        relationship = unitData.relationship,
         health = unitData.health,
-        attackType = unitData.attackType,
-        attackPower = unitData.attackPower,
-        attackRange = unitData.attackRange,
-        attackSpeed = unitData.attackSpeed,
-        aggroRange = unitData.aggroRange,
+        stats = unitData.stats,
         canMove = unitData.canMove,
         canAttack = unitData.canAttack,
         viewportModel = unitData.viewportModel,
@@ -43,7 +40,7 @@ function module.showSelectedUnitCard(unitData: UnitCard.UnitCardProps)
     currentUnitCard.frame.Position = UDim2.fromScale(0.04, 0.95)
 
     table.insert(conns, currentUnitCard.btnFechar.Activated:Connect(function(inputObject, clickCount)
-        module.hideSelectedUnitCard()
+        module.closeSelectedUnitCard(unitData.unitId)
     end))
 
     if currentUnitCard.btnAtacar then
@@ -60,12 +57,38 @@ function module.showSelectedUnitCard(unitData: UnitCard.UnitCardProps)
 
 end
 
+-- Fecha o card por ação explícita do jogador e encerra o modo de interação
+-- atualmente selecionado através do mesmo evento usado pelos botões.
+function module.closeSelectedUnitCard(unitId: string)
+	if isMoverSelected then
+		eventQueue.enqueueEvent({
+			delay = 0,
+			eventType = "CardMoveButtonClickedClient",
+			data = {
+				btnSelected = false,
+				unitId = unitId,
+			},
+		})
+	elseif isAtacarSelected then
+		eventQueue.enqueueEvent({
+			delay = 0,
+			eventType = "CardAttackButtonClickedClient",
+			data = {
+				btnSelected = false,
+				unitId = unitId,
+			},
+		})
+	end
+
+	module.hideSelectedUnitCard()
+end
+
 -- Atualiza o estado observado do card atualmente exibido.
 function module.updateSelectedUnitCard(unitData)
 	if not currentUnitCard then return end
 	if currentUnitCard.unitId ~= unitData.unitId then return end
 
-	if unitData.stats then
+    if unitData.stats and unitData.stats.health ~= nil then
 		currentUnitCard:updateHealth(unitData.stats.health, unitData.stats.maxHealth)
 	end
 
@@ -92,12 +115,19 @@ end
 function module.resetActionButtons()
 	isMoverSelected = false
 	isAtacarSelected = false
+	if currentUnitCard then
+		currentUnitCard:setActionSelected(false, false)
+	end
 end
 
 function onAtacarClicked(unitId)
     isAtacarSelected = not isAtacarSelected
     if isAtacarSelected then
         isMoverSelected = false
+    end
+
+    if currentUnitCard then
+        currentUnitCard:setActionSelected(isMoverSelected, isAtacarSelected)
     end
 
     eventQueue.enqueueEvent({
@@ -115,6 +145,10 @@ function onMoverClicked(unitId)
     isMoverSelected = not isMoverSelected
     if isMoverSelected then
         isAtacarSelected = false
+    end
+
+    if currentUnitCard then
+        currentUnitCard:setActionSelected(isMoverSelected, isAtacarSelected)
     end
 
     eventQueue.enqueueEvent({

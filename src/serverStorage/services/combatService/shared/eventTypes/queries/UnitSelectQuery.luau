@@ -1,5 +1,7 @@
 local module = {}
 
+export type UnitRelationship = "ALLY" | "ENEMY" | "NEUTRAL"
+
 export type UnitSelectQuery = {
     eventType: "UnitSelectQuery",
     type: "QUERY",
@@ -19,8 +21,9 @@ export type UnitSelectQuerySuccess = {
     requesterId: string,
     data: {
         unitId: string,
-        unitName: string,
+        unitName: string?,
         unitType : string,
+        relationship: UnitRelationship?,
         stats: {
             health: number,
             maxHealth : number,
@@ -29,17 +32,17 @@ export type UnitSelectQuerySuccess = {
             damage: number,
             attackRange: number,
             attackSpeed: number,
-        },
+        }?,
         npcUnit : {
             weapon : string,
             equipment : string,
             behavior : string,
             aggroRange : number,
             walkspeed : number
-        },
+        }?,
         structureUnit : {
             structureType : number
-        },
+        }?,
         canTarget : boolean,
         canMove : boolean
     }

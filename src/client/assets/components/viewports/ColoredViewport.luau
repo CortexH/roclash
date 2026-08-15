@@ -4,7 +4,10 @@ export type ViewportProps = {
     name: string?,
     size: UDim2?,
     borderColor: Color3?,
-    worldModel: Instance?
+    worldModel: Instance?,
+    backgroundColor: Color3?,
+    backgroundTransparency: number?,
+    cameraDistanceScale: number?,
 }
 
 local DEFAULT_BORDER_COLOR = Color3.fromRGB(59, 130, 246)
@@ -14,7 +17,8 @@ function module.create(props: ViewportProps)
     local viewport = Instance.new("ViewportFrame")
     viewport.Name = props.name or "ColoredViewport"
     viewport.Size = props.size or UDim2.fromOffset(200, 200)
-    viewport.BackgroundTransparency = 1
+    viewport.BackgroundColor3 = props.backgroundColor or Color3.fromRGB(18, 20, 24)
+    viewport.BackgroundTransparency = props.backgroundTransparency or 1
     viewport.BorderSizePixel = 0
 
     -- Borda arredondada
@@ -54,7 +58,8 @@ function module.create(props: ViewportProps)
             )
 
             -- Distância da câmera baseada no tamanho do modelo
-            local distance = math.max(bboxSize.X, bboxSize.Y, bboxSize.Z) * 1.8
+            local distance = math.max(bboxSize.X, bboxSize.Y, bboxSize.Z)
+                * (props.cameraDistanceScale or 1.8)
 
             camera.CFrame = CFrame.lookAt(
                 Vector3.new(0, 0, distance),
@@ -64,7 +69,8 @@ function module.create(props: ViewportProps)
         elseif model:IsA("BasePart") then
             model.CFrame = CFrame.new()
 
-            local distance = math.max(model.Size.X, model.Size.Y, model.Size.Z) * 1.8
+            local distance = math.max(model.Size.X, model.Size.Y, model.Size.Z)
+                * (props.cameraDistanceScale or 1.8)
 
             camera.CFrame = CFrame.lookAt(
                 Vector3.new(0, 0, distance),
