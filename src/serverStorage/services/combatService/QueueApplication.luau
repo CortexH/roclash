@@ -60,7 +60,8 @@ local modulesFolder = game.ServerStorage.Server.services.combatService.modules
 local serviceModules = {
 	["entityModule"] = require(modulesFolder.entityModule.EntityModule),
 	["npcModule"] = require(modulesFolder.npcModule.NpcModule),
-	["interactionModule"] = require(modulesFolder.interactionModule.InteractionModule)
+	["interactionModule"] = require(modulesFolder.interactionModule.InteractionModule),
+	["notificationModule"] = require(modulesFolder.notificationModule.NotificationModule)
 }
 
 function module.processEvent(event, targetQueue, context)

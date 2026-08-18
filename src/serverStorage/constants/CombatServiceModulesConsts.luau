@@ -5,7 +5,8 @@ module.paths = {
 	["npcModule"] = game.ServerStorage.Server.services.combatService.modules.npcModule,
 	["mapModule"] = game.ServerStorage.Server.services.combatService.modules.mapModule,
 	["gameModule"] = game.ServerStorage.Server.services.combatService.modules.gameModule,
-	["interactionModule"] = game.ServerStorage.Server.services.combatService.modules.interactionModule
+	["interactionModule"] = game.ServerStorage.Server.services.combatService.modules.interactionModule,
+	["notificationModule"] = game.ServerStorage.Server.services.combatService.modules.notificationModule
 }
 
 return module

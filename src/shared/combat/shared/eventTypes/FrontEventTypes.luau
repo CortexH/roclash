@@ -24,6 +24,15 @@ export type unitDied = {
 	}
 }
 
+export type unitDiedNotification = {
+	time : number,
+	eventType : "UnitDiedNotificationEvent",
+	data : {
+		unitId : string,
+		killerUnitId : string
+	}
+}
+
 export type unitMove = {
 	time : number,
 	eventType : "UnitMove",

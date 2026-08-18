@@ -16,16 +16,16 @@ Este documento explica os eventos do sistema de combate, organizados por **fluxo
                         │
             eventos processados no tick
                         │
-        ┌───────────────┼───────────────┐
-        │               │               │
-        ▼               ▼               ▼
-   RENDER          INTERACTION      UI STATE
-   PIPELINE         PIPELINE        PIPELINE
-        │               │               │
-        ▼               ▼               ▼
-  Render Event      Response         UI Diff
-        │               │               │
-        └───────────────┴───────────────┘
+        ┌───────────┬───────────┬──────────────┬──────────────┐
+        │           │           │              │
+        ▼           ▼           ▼              ▼
+     RENDER    INTERACTION   UI STATE      NOTIFICATION
+    PIPELINE    PIPELINE     PIPELINE         PIPELINE
+        │           │           │              │
+        ▼           ▼           ▼              ▼
+ Render Event   Response     UI Diff      Semantic Event
+        │           │           │              │
+        └───────────┴───────────┴──────────────┘
                         │
                         ▼
                      CLIENTE
@@ -38,6 +38,7 @@ Cada pipeline responde a uma pergunta diferente:
 | Render | O que mudou no mundo? |
 | Interaction | O que o jogador pediu e qual é a resposta? |
 | UI State | O que mudou no estado que o jogador está observando? |
+| Notification | Qual acontecimento o backend decidiu comunicar ao jogador? |
 
 ---
 
@@ -137,7 +138,11 @@ AttackResolvedEvent
 
 ```text
 UnitDiedEvent
-    ↓
+    ├─→ (notificationModule: UnitLifecycleNotifySystem)
+    │   UnitDiedNotificationEvent
+    │       ↓ (NotificationPipeline)
+    │   cliente decide como apresentar ou ignorar
+    ↓ (demais systems de domínio)
 UnitAggroStoppedEvent
     ↓
 TargetLostEvent
@@ -372,7 +377,17 @@ Listagem de todos os eventos do sistema, organizados por módulo/categoria, com 
 | `UnitAggroStartedEvent` | uma unit começou a aggroar um alvo |
 | `BeginGameEvent` | início do jogo |
 
-## 3.6 Eventos de domínio (npcModule)
+## 3.6 Notification Events (notificationModule)
+
+Notification Events expressam a decisão do backend de comunicar um acontecimento. Elas carregam dados semânticos e não definem texto, componente, duração, cor ou qualquer outra apresentação de UI.
+
+| Evento | Payload | Origem |
+|--------|---------|--------|
+| `UnitDiedNotificationEvent` | `unitId`, `killerUnitId` | gerado a partir de `UnitDiedEvent` |
+
+O `NotificationPipeline` encaminha esses eventos ao cliente pelo lote já existente. O frontend pode mostrar, ignorar ou agrupar cada evento e permanece responsável pela apresentação.
+
+## 3.7 Eventos de domínio (npcModule)
 
 | Evento | O que faz |
 |--------|-----------|
@@ -385,7 +400,7 @@ Listagem de todos os eventos do sistema, organizados por módulo/categoria, com 
 | `UnitIdleEvent` | uma unit ficou ociosa |
 | `UnitStructureBlockingPathEvent` | uma estrutura bloqueia o caminho de uma unit |
 
-## 3.7 Render Events (servidor → cliente)
+## 3.8 Render Events (servidor → cliente)
 
 | Evento | O que faz |
 |--------|-----------|
@@ -399,7 +414,7 @@ Listagem de todos os eventos do sistema, organizados por módulo/categoria, com 
 | `ImpactVFX` | render de efeito visual de impacto |
 | `GameBeginEvent` | render de início de jogo |
 
-## 3.8 Interaction Responses (servidor → cliente)
+## 3.9 Interaction Responses (servidor → cliente)
 
 | Evento | O que faz |
 |--------|-----------|
@@ -413,13 +428,13 @@ Listagem de todos os eventos do sistema, organizados por módulo/categoria, com 
 > `unitName` e `relationship` são opcionais. Quando ausentes, o frontend omite os respectivos elementos em vez de inferir nome ou relação a partir de permissões como `canTarget` e `canMove`.
 > Os grupos e valores de apresentação (`stats`, `attacker` e `npcUnit`) também podem ser parciais na resposta; a Unit Card renderiza apenas cada valor efetivamente recebido, preservando `0` como valor válido.
 
-## 3.9 UI State (servidor → cliente)
+## 3.10 UI State (servidor → cliente)
 
 | Evento | O que faz |
 |--------|-----------|
 | `UIStateUpdateResponse` | atualização incremental do estado observado (UI Diff) |
 
-## 3.10 Eventos internos do cliente
+## 3.11 Eventos internos do cliente
 
 | Evento | O que faz |
 |--------|-----------|

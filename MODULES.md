@@ -99,6 +99,24 @@ O sistema é dividido em módulos, cada um com uma responsabilidade clara e um `
 
 ---
 
+## notificationModule
+
+**Responsabilidade:** aplicar políticas de notificação sobre eventos já ocorridos e gerar eventos semânticos que podem ser consumidos pelo frontend ou, futuramente, por outros destinos.
+
+- Consome eventos de domínio relevantes por meio de `EventsListenerSystem`.
+- Inicialmente consome `UnitDiedEvent` e pode produzir `UnitDiedNotificationEvent`.
+- Organiza políticas por contexto; o fluxo inicial pertence ao `UnitLifecycleNotifySystem`, evitando concentrar listeners distintos em um system genérico.
+- Os contratos e a factory de Notification Events ficam em `combatService/shared`, permitindo que pipelines e outros consumidores não dependam da estrutura interna do módulo.
+- Não possui nem modifica estado do `BattleContext`; por isso não possui appliers.
+- Não duplica regras do módulo que produziu o evento de domínio.
+- Não define texto, layout, duração, animação, som ou componentes visuais.
+- O `NotificationPipeline` apenas traduz e encaminha Notification Events no lote existente do servidor para o cliente. A decisão de mostrar, ignorar ou agrupar pertence ao frontend.
+- O evento semântico não depende de UI de batalha, permitindo que outros canais de entrega sejam adicionados futuramente sem alterar sua definição.
+
+**BattleContext que organiza:** nenhum.
+
+---
+
 ## Resumo
 
 | Módulo | Responsabilidade | BattleContext | Valida intents? |
@@ -108,6 +126,7 @@ O sistema é dividido em módulos, cada um com uma responsabilidade clara e um `
 | `mapModule` | dados espaciais do mapa | `MapStateBC` / `ConstsBC` | Não |
 | `interactionModule` | interação jogador ↔ servidor | `PlayerSessionBC` | Não (só traduz command → intent) |
 | `gameModule` | coisas genéricas | — | Não |
+| `notificationModule` | políticas de comunicação ao jogador | — | Não |
 
 ---
 
@@ -142,11 +161,13 @@ evento
 │    entityModule.applyEvent(event)           │  (aplicar dano, mover, spawnar...)
 │    npcModule.applyEvent(event)              │
 │    interactionModule.applyEvent(event)      │
+│    notificationModule.applyEvent(event)     │  (sem mutação; não possui appliers)
 ├─────────────────────────────────────────────┤
 │ 2. Systems (em TODOS os módulos)            │  geram NOVOS eventos
 │    entityModule.handleEvent(event)          │  (validar intent, reagir, gerar...)
 │    npcModule.handleEvent(event)             │
 │    interactionModule.handleEvent(event)     │
+│    notificationModule.handleEvent(event)    │  (aplica políticas de notificação)
 ├─────────────────────────────────────────────┤
 │ 3. Enfileirar os novos eventos              │
 └─────────────────────────────────────────────┘
