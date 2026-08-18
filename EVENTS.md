@@ -81,6 +81,18 @@ UnitAggroCommandResponse
 
 Após aggroar, a unit se move até o alvo (ver Fluxo de Movimento).
 
+Receber dano também pode iniciar uma tentativa de aggro, sem garantir sua aceitação:
+
+```text
+DamageAppliedEvent
+    ↓ (npcModule: AggroSystem produz a oportunidade)
+AggroIntent (origin.type = DAMAGE_RECEIVED, policy = AUTO)
+    ↓ (npcModule: AggroSystem valida o estado atual)
+AggroIntentAccepted / AggroIntentRejected
+```
+
+Somente units `AGGRESSIVE` ou `DEFENSIVE`, sem aggro ativo, podem aceitar essa origem. As validações normais de existência, vida, inimizade, posicionamento e `aggroRange` continuam sendo aplicadas. `PEACEFUL`, alvo atual existente ou fonte de dano inválida resultam em rejeição (ou, quando não há um identificador de entidade fonte, nenhum intent é produzido).
+
 ## 1.3 Fluxo de Movimento
 
 ```text
@@ -326,7 +338,7 @@ Listagem de todos os eventos do sistema, organizados por módulo/categoria, com 
 |--------|-----------|--------------|----------------|
 | `MoveIntent` | intenção de mover uma unit | npcModule | `MoveIntentAccepted` / `MoveIntentRejected` |
 | `SpawnIntent` | intenção de spawnar uma unit | entityModule | `SpawnIntentAccepted` / `SpawnIntentRejected` |
-| `AggroIntent` | intenção de aggroar um alvo | npcModule | `AggroIntentAccepted` / `AggroIntentRejected` |
+| `AggroIntent` | intenção de aggroar um alvo; `origin.type` identifica a oportunidade (`PLAYER`, `SYSTEM` ou `DAMAGE_RECEIVED`) | npcModule | `AggroIntentAccepted` / `AggroIntentRejected` |
 | `AttackIntent` | intenção de atacar um alvo | npcModule | `AttackIntentAccepted` / `AttackIntentRejected` |
 
 ## 3.4 CommandResponses (interactionModule)

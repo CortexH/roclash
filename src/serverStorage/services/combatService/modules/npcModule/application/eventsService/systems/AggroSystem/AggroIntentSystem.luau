@@ -50,18 +50,26 @@ function module.handle(event: intentTypes.AggroIntent, context: any)
     -- 1.1 Guard de idempotência: se a unidade já está aggroando este mesmo alvo,
     -- não re-emitir o aggro (evita o ciclo de re-aggro que gera avalanches de
     -- UnitAggroStartedEvent a cada ataque resolvido).
-    local brain = brainPort.getNpcBrain(unitId, context)
-    if brain and brain:getAggro() then
-        local currentAggro = brain:getAggro():getCurrentAggro()
-        if currentAggro == targetId then
-            return {}
-        end
-    end
-
     -- 2. Pegamos a SelfBattleView
     local selfView = viewPort.getSelfBattleView(unitId, context)
     if not selfView then
         return {createRejected(unitId, targetId, "SOURCE_VIEW_NOT_FOUND", origin)}
+    end
+
+    local brain = brainPort.getNpcBrain(unitId, context)
+    local currentAggro = brain and brain:getAggro() and brain:getAggro():getCurrentAggro()
+
+    if origin and origin.type == "DAMAGE_RECEIVED" then
+        if selfView.aggroBehavior ~= "AGGRESSIVE" and selfView.aggroBehavior ~= "DEFENSIVE" then
+            return {createRejected(unitId, targetId, "BEHAVIOR_NOT_ALLOWED", origin)}
+        end
+
+        if currentAggro then
+            return {createRejected(unitId, targetId, "ALREADY_HAS_TARGET", origin)}
+        end
+    elseif currentAggro == targetId then
+        -- Mantém a idempotência dos fluxos preexistentes de command/search.
+        return {}
     end
 
     -- 3. Validação completa usando AggroValidator

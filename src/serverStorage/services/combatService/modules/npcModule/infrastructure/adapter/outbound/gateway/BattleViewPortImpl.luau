@@ -91,6 +91,7 @@ port.getUnitBattleView = function(selfId, unitId, context)
 
 	local unit : unitEntity.unitEntity = context["UnitsBC"]:getUnit(unitId)
 	local self : unitEntity.unitEntity = context["UnitsBC"]:getUnit(selfId)
+	if not unit or not self then return nil end
 
 	local view : unitView.UnitBattleView = {
 		id = unitId,
