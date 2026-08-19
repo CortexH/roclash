@@ -94,6 +94,8 @@ AggroIntentAccepted / AggroIntentRejected
 
 Somente units `AGGRESSIVE` ou `DEFENSIVE`, sem aggro ativo, podem aceitar essa origem. As validações normais de existência, vida, inimizade, posicionamento e `aggroRange` continuam sendo aplicadas. `PEACEFUL`, alvo atual existente ou fonte de dano inválida resultam em rejeição (ou, quando não há um identificador de entidade fonte, nenhum intent é produzido).
 
+Units `PEACEFUL` somente podem aceitar `AggroIntent` quando as duas condições forem verdadeiras: `policy = COMMAND` e `origin.type = PLAYER`. Intents automáticos (`policy = AUTO`), origins do sistema e reações a dano devem ser rejeitados com `BEHAVIOR_NOT_ALLOWED`.
+
 ## 1.3 Fluxo de Movimento
 
 ```text

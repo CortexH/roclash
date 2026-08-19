@@ -56,6 +56,14 @@ function module.handle(event: intentTypes.AggroIntent, context: any)
         return {createRejected(unitId, targetId, "SOURCE_VIEW_NOT_FOUND", origin)}
     end
 
+    -- Units PEACEFUL só podem receber aggro por um comando explícito do jogador.
+    -- Exigir policy e origin evita que buscas automáticas ou intents inconsistentes
+    -- continuem o combate depois que o alvo escolhido pelo jogador morrer.
+    if selfView.aggroBehavior == "PEACEFUL"
+        and (policy ~= "COMMAND" or not origin or origin.type ~= "PLAYER") then
+        return {createRejected(unitId, targetId, "BEHAVIOR_NOT_ALLOWED", origin)}
+    end
+
     local brain = brainPort.getNpcBrain(unitId, context)
     local currentAggro = brain and brain:getAggro() and brain:getAggro():getCurrentAggro()
 
